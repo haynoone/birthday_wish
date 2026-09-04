@@ -137,7 +137,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
               </span>
-              <span>Encrypted Birthday Capsule</span>
+              <span>Top-Secret Birthday Vault 🤫</span>
               <span className="text-zinc-500">•</span>
               <span className="text-zinc-400">October 28</span>
             </>
@@ -214,7 +214,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white max-w-2xl leading-[1.15] drop-shadow-sm"
               >
-                Something special is coming…
+                Sorry you have to wait to see it…
               </motion.h1>
             )}
           </AnimatePresence>
@@ -241,10 +241,10 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="mt-3 sm:mt-4 text-base sm:text-lg text-zinc-400 max-w-md"
+                className="mt-3 sm:mt-4 text-base sm:text-lg text-zinc-300 max-w-lg leading-relaxed"
               >
-                This experience unlocks on{' '}
-                <span className="text-amber-300 font-medium">October 28</span>.
+                No peeking allowed until{' '}
+                <span className="text-amber-300 font-medium">October 28</span>! Hands off, we're watching you 👀
               </motion.p>
             )}
           </AnimatePresence>
@@ -281,9 +281,9 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.55 }}
-              className="mt-6 text-xs text-zinc-500 font-mono tracking-wide"
+              className="mt-6 text-xs text-zinc-400 tracking-wide font-medium"
             >
-              Unlocks at midnight 00:00 local time
+              Bursting open the exact second midnight strikes on your clock ⏰ (party hats mandatory!)
             </motion.p>
           )}
         </motion.div>
