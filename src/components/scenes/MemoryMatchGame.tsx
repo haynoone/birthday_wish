@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import confetti from 'canvas-confetti';
 import { experienceConfig } from '../../config/experienceConfig';
 import { MemoryGameCard } from '../../types';
 import { sound } from '../../utils/sound';
-import { Sparkles, Trophy, RotateCcw, ArrowRight, Clock, Award } from 'lucide-react';
+import { triggerCelebration } from '../../utils/celebration';
+import {
+  Sparkles,
+  Trophy,
+  RotateCcw,
+  ArrowRight,
+  Clock,
+  Award,
+  FastForward,
+  CheckCircle2,
+} from 'lucide-react';
 
 interface MemoryMatchGameProps {
   onWin: () => void;
@@ -70,9 +79,15 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
     return () => clearInterval(interval);
   }, [isWon]);
 
+  // Skip button handler
+  const handleSkip = () => {
+    sound.playPop();
+    triggerCelebration({ intensity: 'gentle', playSound: true });
+    onWin();
+  };
+
   // Card click handler
   const handleCardClick = (card: MemoryGameCard) => {
-    // Ignore if locked, already flipped, or already matched
     if (
       isLocked ||
       flippedCards.includes(card.id) ||
@@ -85,7 +100,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
     const newFlipped = [...flippedCards, card.id];
     setFlippedCards(newFlipped);
 
-    // If 2 cards now flipped, evaluate
+    // If 2 cards are now flipped, evaluate match
     if (newFlipped.length === 2) {
       setMoves((prev) => prev + 1);
       setIsLocked(true);
@@ -103,123 +118,155 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
           setFlippedCards([]);
           setIsLocked(false);
 
-          // Check if won
+          // Check if all pairs are solved
           if (newMatched.length === experienceConfig.memoryGame.cards.length) {
             handleVictory();
           }
-        }, 400);
+        }, 350);
       } else {
-        // MISMATCH -> flip back after 900 ms as specified
+        // MISMATCH -> flip back after 850 ms
         setTimeout(() => {
           setFlippedCards([]);
           setIsLocked(false);
-        }, 900);
+        }, 850);
       }
     }
   };
 
   const handleVictory = () => {
     setIsWon(true);
+    triggerCelebration({ intensity: 'grand', playSound: true });
 
-    // Festive confetti bursts
-    confetti({
-      particleCount: 100,
-      spread: 80,
-      origin: { y: 0.6 },
-      colors: ['#f43f5e', '#fb7185', '#f59e0b', '#10b981', '#6366f1'],
-    });
-    setTimeout(() => {
-      confetti({
-        particleCount: 60,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-      });
-      confetti({
-        particleCount: 60,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-      });
-    }, 400);
-
-    // Auto-advance or allow clicking the button
+    // Allow user to click button or auto-advance smoothly
     setTimeout(() => {
       onWin();
-    }, 2800);
+    }, 3200);
   };
+
+  const totalPairs = experienceConfig.memoryGame.cards.length;
 
   return (
     <motion.div
       id="scene-memoryMatchGame"
-      initial={{ opacity: 0, scale: 0.96 }}
+      initial={{ opacity: 0, scale: 0.97 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.5 }}
-      className="w-full max-w-4xl mx-auto px-4 py-6 sm:py-8 flex flex-col items-center select-none"
+      exit={{ opacity: 0, scale: 0.97 }}
+      transition={{ duration: 0.4 }}
+      className="w-full max-w-3xl mx-auto px-4 py-4 sm:py-6 flex flex-col items-center select-none"
     >
-      {/* Title & Stats */}
-      <div className="text-center mb-6">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20 mb-3">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>Birthday Memory Match</span>
+      {/* Top Header Card */}
+      <div className="w-full text-center mb-5">
+        <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-semibold bg-rose-500/10 dark:bg-rose-500/20 text-rose-600 dark:text-rose-300 border border-rose-500/20 mb-2.5 shadow-xs">
+          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+          <span>Card Memory Challenge 🧩</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif]">
-          Match All the Memory Cards
+
+        <h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif] tracking-tight">
+          Match The Mystery Cards
         </h2>
-        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
-          Match all 4 pairs to unlock Sadia's grand birthday surprise! 🎁
+        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-md mx-auto">
+          Flip cards to find the matching pairs and unlock the grand surprise!
         </p>
 
-        {/* Game Stats bar */}
-        <div className="mt-4 flex items-center justify-center gap-6 text-xs sm:text-sm font-semibold text-zinc-600 dark:text-zinc-300">
-          <div className="flex items-center gap-1.5 bg-white dark:bg-zinc-800 px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
-            <Award className="w-4 h-4 text-amber-500" />
-            <span>Pairs: {matchedPairs.length} / {experienceConfig.memoryGame.cards.length}</span>
+        {/* Progress & Control Bar */}
+        <div className="mt-4 max-w-xl mx-auto flex flex-wrap items-center justify-between gap-2 p-2 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800 shadow-sm text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+          {/* Pairs Solved Medallion */}
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-100/80 dark:bg-zinc-800/80">
+            <Award className="w-4 h-4 text-amber-500 shrink-0" />
+            <span>Pairs: <strong className="text-zinc-900 dark:text-white font-mono">{matchedPairs.length}</strong> / {totalPairs}</span>
+            {/* Visual Mini Progress Dots */}
+            <div className="flex items-center gap-1 ml-1">
+              {Array.from({ length: totalPairs }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    i < matchedPairs.length
+                      ? 'bg-emerald-500 scale-110 shadow-xs shadow-emerald-500/50'
+                      : 'bg-zinc-300 dark:bg-zinc-700'
+                  }`}
+                />
+              ))}
+            </div>
           </div>
-          <button
-            onClick={setupGame}
-            title="Restart Memory Game"
-            className="flex items-center gap-1.5 bg-white dark:bg-zinc-800 px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm hover:bg-zinc-100 dark:hover:bg-zinc-700 cursor-pointer transition-colors"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-rose-500" />
-            <span>Reset</span>
-          </button>
-          <div className="flex items-center gap-1.5 bg-white dark:bg-zinc-800 px-3.5 py-1.5 rounded-full border border-zinc-200 dark:border-zinc-700 shadow-sm">
-            <Clock className="w-3.5 h-3.5 text-indigo-500" />
-            <span>{Math.floor(seconds / 60)}:{(seconds % 60).toString().padStart(2, '0')}</span>
+
+          {/* Moves & Timer */}
+          <div className="flex items-center gap-3">
+            <div className="text-xs text-zinc-500 dark:text-zinc-400">
+              Moves: <strong className="text-zinc-800 dark:text-zinc-200 font-mono">{moves}</strong>
+            </div>
+
+            <div className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-300 text-xs font-mono">
+              <Clock className="w-3.5 h-3.5" />
+              <span>{Math.floor(seconds / 60)}:{(seconds % 60).toString().padStart(2, '0')}</span>
+            </div>
+          </div>
+
+          {/* Actions: Reset & Small Skip Button */}
+          <div className="flex items-center gap-1.5 ml-auto sm:ml-0">
+            <button
+              id="memory-game-reset-btn"
+              onClick={setupGame}
+              title="Restart Memory Game"
+              className="px-2.5 py-1.5 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 transition-colors cursor-pointer flex items-center gap-1 text-xs"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-zinc-500" />
+              <span className="hidden sm:inline">Reset</span>
+            </button>
+
+            {/* Requested Small Skip Button */}
+            <button
+              id="memory-game-skip-btn"
+              onClick={handleSkip}
+              title="Skip straight to surprise"
+              className="group px-3 py-1.5 rounded-xl bg-gradient-to-r from-rose-500/15 via-amber-500/15 to-rose-500/15 hover:from-rose-500/25 hover:to-amber-500/25 border border-rose-500/30 text-rose-600 dark:text-rose-300 transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold active:scale-95 shadow-xs"
+            >
+              <span>Skip</span>
+              <FastForward className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Cards Grid: 2x4 on mobile, 4x2 on tablet/desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-2xl px-2">
+      {/* Cards Grid: Responsive 2x4 on mobile, 4x2 on tablet/desktop */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-2xl px-1">
         {cards.map((card) => {
           const isFlipped = flippedCards.includes(card.id) || matchedPairs.includes(card.pairId);
           const isMatched = matchedPairs.includes(card.pairId);
 
           return (
-            <div
+            <motion.div
               key={card.id}
+              whileHover={!isFlipped ? { y: -4, scale: 1.02 } : {}}
+              whileTap={!isFlipped ? { scale: 0.98 } : {}}
               className="relative aspect-[3/4] cursor-pointer perspective-1000"
               onClick={() => handleCardClick(card)}
             >
               <motion.div
                 initial={false}
                 animate={{ rotateY: isFlipped ? 180 : 0 }}
-                transition={{ duration: 0.4, ease: 'easeOut' }}
+                transition={{ duration: 0.45, ease: [0.23, 1, 0.32, 1] }}
                 style={{ transformStyle: 'preserve-3d' }}
                 className="w-full h-full relative"
               >
-                {/* Back of Card (Face Down) */}
+                {/* Back of Card (Face Down) - Premium Holographic Foil Feel */}
                 <div
                   style={{ backfaceVisibility: 'hidden' }}
-                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-amber-500 p-1 shadow-md hover:shadow-xl transition-shadow flex flex-col items-center justify-center border-2 border-white/40"
+                  className="absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-500 via-pink-500 to-amber-500 p-[2.5px] shadow-md hover:shadow-xl hover:shadow-rose-500/20 transition-all flex flex-col items-center justify-center border border-white/30"
                 >
-                  <div className="w-full h-full rounded-xl bg-zinc-900/40 backdrop-blur-xs flex flex-col items-center justify-center p-3 text-center border border-white/20">
-                    <span className="text-3xl sm:text-4xl mb-1 animate-pulse">🎁</span>
-                    <span className="text-[10px] sm:text-xs font-bold text-white tracking-wider uppercase font-mono">
+                  <div className="w-full h-full rounded-[13px] bg-gradient-to-b from-zinc-900/90 via-zinc-950 to-zinc-900/95 backdrop-blur-sm flex flex-col items-center justify-center p-3 text-center relative overflow-hidden border border-white/10">
+                    {/* Subtle geometric background pattern */}
+                    <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#f43f5e_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+                    
+                    {/* Glowing Center Badge */}
+                    <div className="relative z-10 w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/20 flex items-center justify-center shadow-inner mb-1.5 group-hover:scale-105 transition-transform">
+                      <span className="text-2xl filter drop-shadow-sm animate-pulse">✨</span>
+                    </div>
+
+                    <span className="relative z-10 text-[11px] font-bold text-zinc-100 tracking-wider uppercase font-['Outfit',sans-serif]">
                       Lil Valcano
+                    </span>
+                    <span className="relative z-10 text-[9px] text-rose-300/80 font-medium tracking-wide mt-0.5">
+                      Tap to flip
                     </span>
                   </div>
                 </div>
@@ -230,14 +277,14 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
                     backfaceVisibility: 'hidden',
                     transform: 'rotateY(180deg)',
                   }}
-                  className={`absolute inset-0 rounded-2xl p-1 shadow-lg flex flex-col overflow-hidden transition-all ${
+                  className={`absolute inset-0 rounded-2xl p-[2px] shadow-lg flex flex-col overflow-hidden transition-all duration-300 ${
                     isMatched
-                      ? 'bg-gradient-to-br from-emerald-400 to-teal-500 border-2 border-emerald-300'
-                      : 'bg-gradient-to-br from-rose-400 to-amber-400 border-2 border-rose-300'
+                      ? 'bg-gradient-to-br from-emerald-400 to-teal-500 ring-2 ring-emerald-400/60 shadow-emerald-500/20'
+                      : 'bg-gradient-to-br from-rose-400 to-amber-400'
                   }`}
                 >
-                  <div className="w-full h-full rounded-xl bg-white dark:bg-zinc-900 overflow-hidden flex flex-col relative">
-                    {/* Image */}
+                  <div className="w-full h-full rounded-[14px] bg-white dark:bg-zinc-900 overflow-hidden flex flex-col relative">
+                    {/* Card Photo */}
                     <div className="relative flex-1 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
                       <img
                         src={card.imageUrl}
@@ -245,34 +292,39 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
                         className="w-full h-full object-cover"
                         loading="lazy"
                         onError={(e) => {
-                          // Image fallback to emoji visual
                           (e.target as HTMLElement).style.display = 'none';
                         }}
                       />
-                      {/* Floating Emoji overlay */}
-                      <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 dark:bg-zinc-900/90 flex items-center justify-center text-lg shadow-sm">
+                      {/* Floating Emoji Badge */}
+                      <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center text-base shadow-sm border border-black/5 dark:border-white/10">
                         {card.emoji}
                       </div>
                     </div>
 
                     {/* Card Title Label */}
-                    <div className="py-2 px-2 text-center bg-white dark:bg-zinc-900 border-t border-zinc-100 dark:border-zinc-800">
-                      <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate block">
+                    <div className="py-2 px-2 text-center bg-white/95 dark:bg-zinc-900/95 border-t border-zinc-100 dark:border-zinc-800">
+                      <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate block font-['Outfit',sans-serif]">
                         {card.title}
                       </span>
                     </div>
 
+                    {/* Matched Overlay Banner */}
                     {isMatched && (
-                      <div className="absolute inset-0 bg-emerald-500/20 backdrop-blur-[1px] flex items-center justify-center">
-                        <div className="bg-white/95 dark:bg-zinc-900/95 px-2.5 py-1 rounded-full text-[11px] font-bold text-emerald-600 shadow">
-                          ✓ Matched!
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute inset-0 bg-emerald-950/40 backdrop-blur-[2px] flex items-center justify-center p-2"
+                      >
+                        <div className="bg-white/95 dark:bg-zinc-900/95 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-md flex items-center gap-1.5 border border-emerald-500/30">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+                          <span>Matched!</span>
                         </div>
-                      </div>
+                      </motion.div>
                     )}
                   </div>
                 </div>
               </motion.div>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -281,26 +333,27 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
       <AnimatePresence>
         {isWon && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 10 }}
+            initial={{ opacity: 0, scale: 0.9, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="mt-8 p-6 bg-white dark:bg-zinc-900 border border-amber-300 dark:border-amber-700/60 rounded-3xl shadow-2xl text-center max-w-md w-full"
+            className="mt-6 p-6 sm:p-8 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-amber-300/80 dark:border-amber-700/60 rounded-3xl shadow-2xl text-center max-w-md w-full"
           >
-            <div className="w-14 h-14 bg-amber-100 dark:bg-amber-900/40 rounded-full flex items-center justify-center text-amber-500 mx-auto mb-3 shadow-inner">
-              <Trophy className="w-8 h-8 text-amber-500" />
+            <div className="w-16 h-16 bg-gradient-to-tr from-amber-400 to-rose-400 rounded-2xl flex items-center justify-center text-white mx-auto mb-3.5 shadow-lg shadow-amber-500/30">
+              <Trophy className="w-8 h-8 text-white" />
             </div>
+
             <h3 className="text-2xl font-extrabold text-zinc-900 dark:text-zinc-100 font-['Outfit',sans-serif]">
-              You unlocked something! 🎉
+              You Unlocked The Surprise! 🎉
             </h3>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1">
-              All memory pairs revealed in {moves} moves. Revealing your final birthday surprise...
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 mt-1.5">
+              All memory pairs revealed in <strong className="text-rose-500">{moves} moves</strong>. Unveiling your grand final surprise...
             </p>
 
             <button
               onClick={onWin}
-              className="mt-5 w-full py-3 px-6 rounded-full font-bold text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 cursor-pointer hover:scale-102 transition-all"
+              className="mt-5 w-full py-3.5 px-6 rounded-full font-bold text-base text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-xl shadow-rose-500/25 flex items-center justify-center gap-2 cursor-pointer hover:scale-102 active:scale-98 transition-all"
             >
-              <span>Open Final Gift Reveal Now</span>
+              <span>Open Final Surprise! 🎁</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </motion.div>

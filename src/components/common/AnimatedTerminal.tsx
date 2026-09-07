@@ -93,7 +93,7 @@ export const AnimatedTerminal: React.FC<AnimatedTerminalProps> = ({
 
         <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-semibold">
           <Terminal className="w-3.5 h-3.5 text-rose-400" />
-          <span>valcano@birthday:~</span>
+          <span>valcano@fun-notes:~</span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export const AnimatedTerminal: React.FC<AnimatedTerminalProps> = ({
       {/* Terminal Body */}
       <div className="p-5 min-h-[260px] sm:min-h-[300px] flex flex-col justify-start space-y-3 overflow-y-auto">
         <div className="text-zinc-500 text-xs select-none">
-          Last login: Oct 28 00:00:01 on ttys001 • Birthday Shell v1.0
+          Special thoughts loaded ✨ • Good vibes only
         </div>
 
         {/* Previously completed lines */}

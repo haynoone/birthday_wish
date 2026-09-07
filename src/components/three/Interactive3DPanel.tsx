@@ -3,7 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Sparkles } from '@react-three/drei';
 import * as THREE from 'three';
 import { sound } from '../../utils/sound';
-import { Flame, Sparkles as SparklesIcon, Heart, Cake } from 'lucide-react';
+import { Flame, Sparkles as SparklesIcon, Gamepad2, Cake } from 'lucide-react';
 import { SplineLoveScene } from './SplineLoveScene';
 
 interface Particle {
@@ -90,56 +90,267 @@ const MiniVolcanoModel: React.FC<{
   );
 };
 
-// Alternative Model: Birthday Cake with candles
-const BirthdayCakeModel: React.FC<{ onInteract: () => void }> = ({ onInteract }) => {
+// Realistic Artisan Celebration Cake with rich details, tiered sponge, glazed ganache drip, piped frosting pearls, glossy strawberries, chocolate wafer straws, colorful sprinkles, and animated dynamic candle flames
+const BirthdayCakeModel: React.FC<{
+  isCelebrating?: boolean;
+  onInteract: () => void;
+}> = ({ isCelebrating = false, onInteract }) => {
   const groupRef = useRef<THREE.Group>(null);
-  useFrame((_, delta) => {
+  const flameLightsRef = useRef<THREE.PointLight[]>([]);
+
+  // Slow, elegant auto-rotation
+  useFrame((state, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.4;
+      groupRef.current.rotation.y += delta * (isCelebrating ? 0.8 : 0.35);
     }
+    const t = state.clock.elapsedTime;
+    // Flickering candle lights
+    flameLightsRef.current.forEach((light, i) => {
+      if (light) {
+        const flicker = Math.sin(t * 16 + i * 2) * 0.25 + Math.cos(t * 26 + i) * 0.15;
+        light.intensity = (isCelebrating ? 3.5 : 1.8) + flicker;
+      }
+    });
   });
+
+  // Precomputed geometry positions
+  const tier1Pearls = useMemo(() => {
+    const count = 22;
+    const r = 1.34;
+    return Array.from({ length: count }, (_, i) => {
+      const angle = (i / count) * Math.PI * 2;
+      return [Math.cos(angle) * r, 0.32, Math.sin(angle) * r] as [number, number, number];
+    });
+  }, []);
+
+  const tier2Pearls = useMemo(() => {
+    const count = 16;
+    const r = 0.9;
+    return Array.from({ length: count }, (_, i) => {
+      const angle = (i / count) * Math.PI * 2;
+      return [Math.cos(angle) * r, 1.06, Math.sin(angle) * r] as [number, number, number];
+    });
+  }, []);
+
+  // Cascading glaze drip drops along Tier 1 edge
+  const glazeDrips = useMemo(() => {
+    const count = 12;
+    const r = 1.33;
+    return Array.from({ length: count }, (_, i) => {
+      const angle = (i / count) * Math.PI * 2;
+      const dripLen = 0.12 + ((i * 7) % 5) * 0.035;
+      return {
+        pos: [Math.cos(angle) * r, 0.98 - dripLen / 2, Math.sin(angle) * r] as [number, number, number],
+        len: dripLen,
+      };
+    });
+  }, []);
+
+  // Realistic Strawberries on top of Tier 2
+  const strawberries = useMemo(() => {
+    const count = 5;
+    const r = 0.52;
+    return Array.from({ length: count }, (_, i) => {
+      const angle = (i / count) * Math.PI * 2 + 0.3;
+      return {
+        pos: [Math.cos(angle) * r, 1.82, Math.sin(angle) * r] as [number, number, number],
+        rot: [0.1, angle, 0.15] as [number, number, number],
+      };
+    });
+  }, []);
+
+  // Edible rainbow sprinkles scattered on glaze
+  const sprinkles = useMemo(() => {
+    const colors = ['#f59e0b', '#fb7185', '#38bdf8', '#34d399', '#fef08a', '#ffffff'];
+    return Array.from({ length: 24 }, (_, i) => {
+      const r = 0.2 + (i % 5) * 0.11;
+      const angle = (i / 24) * Math.PI * 2 + (i % 3) * 0.4;
+      return {
+        pos: [Math.cos(angle) * r, 1.76, Math.sin(angle) * r] as [number, number, number],
+        rot: [Math.PI / 2, 0, (i * 0.4)] as [number, number, number],
+        color: colors[i % colors.length],
+      };
+    });
+  }, []);
+
+  // Candle setups
+  const candleConfigs = [
+    { pos: [-0.3, 1.76, 0.08] as [number, number, number], waxColor: '#fbcfe8', stripeColor: '#f43f5e' },
+    { pos: [0.0, 1.76, -0.22] as [number, number, number], waxColor: '#bae6fd', stripeColor: '#0284c7' },
+    { pos: [0.3, 1.76, 0.08] as [number, number, number], waxColor: '#fef08a', stripeColor: '#eab308' },
+  ];
 
   return (
     <group
       ref={groupRef}
-      position={[0, -0.6, 0]}
+      position={[0, -0.75, 0]}
       onClick={(e) => {
         e.stopPropagation();
         onInteract();
       }}
     >
-      {/* Cake Base */}
-      <mesh position={[0, 0.4, 0]} castShadow>
-        <cylinderGeometry args={[1.5, 1.5, 0.8, 16]} />
-        <meshStandardMaterial color="#fed7aa" roughness={0.4} />
+      {/* --- ELEGANT CERAMIC CAKE STAND --- */}
+      {/* Stand Base */}
+      <mesh position={[0, 0.04, 0]} castShadow>
+        <cylinderGeometry args={[1.05, 1.18, 0.08, 36]} />
+        <meshStandardMaterial color="#f8fafc" roughness={0.25} metalness={0.15} />
       </mesh>
-      {/* Frosting layer */}
-      <mesh position={[0, 0.82, 0]}>
-        <cylinderGeometry args={[1.52, 1.52, 0.1, 16]} />
-        <meshStandardMaterial color="#fb7185" roughness={0.3} />
+      {/* Stand Stem */}
+      <mesh position={[0, 0.18, 0]}>
+        <cylinderGeometry args={[0.32, 0.48, 0.22, 32]} />
+        <meshStandardMaterial color="#f1f5f9" roughness={0.2} metalness={0.15} />
       </mesh>
-      {/* Top Tier */}
-      <mesh position={[0, 1.25, 0]} castShadow>
-        <cylinderGeometry args={[1.0, 1.0, 0.75, 16]} />
-        <meshStandardMaterial color="#fce7f3" roughness={0.4} />
+      {/* Stand Platter Surface */}
+      <mesh position={[0, 0.28, 0]} receiveShadow>
+        <cylinderGeometry args={[1.62, 1.62, 0.07, 36]} />
+        <meshStandardMaterial color="#ffffff" roughness={0.2} metalness={0.12} />
       </mesh>
-      <mesh position={[0, 1.64, 0]}>
-        <cylinderGeometry args={[1.02, 1.02, 0.08, 16]} />
-        <meshStandardMaterial color="#f43f5e" roughness={0.3} />
+      {/* Gold Trim Ring around Platter */}
+      <mesh position={[0, 0.3, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.62, 0.028, 16, 48]} />
+        <meshStandardMaterial color="#f59e0b" roughness={0.2} metalness={0.85} />
       </mesh>
 
-      {/* 3 Candles */}
-      {[-0.4, 0, 0.4].map((x, i) => (
-        <group key={i} position={[x, 1.9, 0]}>
-          <mesh>
-            <cylinderGeometry args={[0.05, 0.05, 0.45, 8]} />
-            <meshStandardMaterial color="#38bdf8" />
+      {/* --- TIER 1 (BOTTOM SPONGE & FROSTING) --- */}
+      {/* Bottom Vanilla Sponge & Velvet Cream */}
+      <mesh position={[0, 0.68, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[1.32, 1.32, 0.74, 36]} />
+        <meshStandardMaterial color="#fff1f2" roughness={0.4} />
+      </mesh>
+      {/* Middle Strawberry Jam Layer */}
+      <mesh position={[0, 0.68, 0]}>
+        <cylinderGeometry args={[1.33, 1.33, 0.06, 36]} />
+        <meshStandardMaterial color="#e11d48" roughness={0.2} />
+      </mesh>
+      {/* Top Frosting Glaze on Tier 1 */}
+      <mesh position={[0, 1.04, 0]}>
+        <cylinderGeometry args={[1.33, 1.33, 0.06, 36]} />
+        <meshStandardMaterial color="#fb7185" roughness={0.25} />
+      </mesh>
+
+      {/* Base Frosting Pearls (Tier 1) */}
+      {tier1Pearls.map((pos, idx) => (
+        <mesh key={`t1-pearl-${idx}`} position={pos}>
+          <sphereGeometry args={[0.072, 12, 12]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.3} />
+        </mesh>
+      ))}
+
+      {/* Cascading Glaze Drips (Tier 1) */}
+      {glazeDrips.map((drip, idx) => (
+        <mesh key={`drip-${idx}`} position={drip.pos}>
+          <capsuleGeometry args={[0.038, drip.len, 8, 8]} />
+          <meshStandardMaterial color="#f43f5e" roughness={0.15} metalness={0.08} />
+        </mesh>
+      ))}
+
+      {/* --- TIER 2 (TOP TIER) --- */}
+      {/* Top Sponge Body */}
+      <mesh position={[0, 1.4, 0]} castShadow receiveShadow>
+        <cylinderGeometry args={[0.88, 0.88, 0.66, 36]} />
+        <meshStandardMaterial color="#fff7ed" roughness={0.38} />
+      </mesh>
+      {/* Glossy Top Strawberry Mirror Glaze */}
+      <mesh position={[0, 1.74, 0]}>
+        <cylinderGeometry args={[0.895, 0.895, 0.05, 36]} />
+        <meshStandardMaterial color="#f43f5e" roughness={0.12} metalness={0.08} />
+      </mesh>
+
+      {/* Tier 2 Base Cream Pearls */}
+      {tier2Pearls.map((pos, idx) => (
+        <mesh key={`t2-pearl-${idx}`} position={pos}>
+          <sphereGeometry args={[0.06, 12, 12]} />
+          <meshStandardMaterial color="#ffffff" roughness={0.3} />
+        </mesh>
+      ))}
+
+      {/* --- FRESH REALISTIC TOPPINGS (STRAWBERRIES & WAFER STICKS) --- */}
+      {strawberries.map((sb, idx) => (
+        <group key={`sb-${idx}`} position={sb.pos} rotation={sb.rot}>
+          {/* Berry Body */}
+          <mesh position={[0, 0.08, 0]} castShadow>
+            <coneGeometry args={[0.11, 0.22, 16]} />
+            <meshStandardMaterial color="#dc2626" roughness={0.22} metalness={0.05} />
           </mesh>
-          {/* Flame */}
-          <mesh position={[0, 0.3, 0]}>
-            <sphereGeometry args={[0.08, 8, 8]} />
-            <meshStandardMaterial color="#fbbf24" emissive="#f59e0b" emissiveIntensity={2} />
+          {/* Berry Base Curve */}
+          <mesh position={[0, -0.01, 0]}>
+            <sphereGeometry args={[0.105, 12, 12]} />
+            <meshStandardMaterial color="#b91c1c" roughness={0.25} />
           </mesh>
+          {/* Green Calyx Leaves */}
+          <mesh position={[0, 0.19, 0]} rotation={[0, 0.2, 0]}>
+            <cylinderGeometry args={[0.09, 0.02, 0.02, 6]} />
+            <meshStandardMaterial color="#16a34a" roughness={0.4} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* Rolled Chocolate Wafer Sticks */}
+      <mesh position={[0.12, 1.83, 0.12]} rotation={[0.2, 0.6, 1.3]}>
+        <cylinderGeometry args={[0.032, 0.032, 0.55, 12]} />
+        <meshStandardMaterial color="#78350f" roughness={0.35} />
+      </mesh>
+      <mesh position={[-0.1, 1.84, -0.05]} rotation={[-0.2, -0.7, 1.25]}>
+        <cylinderGeometry args={[0.032, 0.032, 0.5, 12]} />
+        <meshStandardMaterial color="#78350f" roughness={0.35} />
+      </mesh>
+
+      {/* Rainbow Sprinkles on Glaze */}
+      {sprinkles.map((sp, idx) => (
+        <mesh key={`sp-${idx}`} position={sp.pos} rotation={sp.rot}>
+          <capsuleGeometry args={[0.014, 0.045, 6, 6]} />
+          <meshStandardMaterial color={sp.color} roughness={0.3} />
+        </mesh>
+      ))}
+
+      {/* --- DETAILED CANDLES WITH DYNAMIC FLICKERING FLAMES --- */}
+      {candleConfigs.map((candle, idx) => (
+        <group key={`candle-${idx}`} position={candle.pos}>
+          {/* Candle Wax Body */}
+          <mesh position={[0, 0.26, 0]} castShadow>
+            <cylinderGeometry args={[0.038, 0.038, 0.52, 16]} />
+            <meshStandardMaterial color={candle.waxColor} roughness={0.35} />
+          </mesh>
+          {/* Candle Gold Accent Ring */}
+          <mesh position={[0, 0.32, 0]}>
+            <cylinderGeometry args={[0.039, 0.039, 0.08, 16]} />
+            <meshStandardMaterial color={candle.stripeColor} roughness={0.2} metalness={0.4} />
+          </mesh>
+          {/* Cotton Wick */}
+          <mesh position={[0, 0.55, 0]}>
+            <cylinderGeometry args={[0.007, 0.007, 0.07, 8]} />
+            <meshStandardMaterial color="#27272a" roughness={0.8} />
+          </mesh>
+          {/* Dynamic Flickering Flame: Outer Corona */}
+          <mesh position={[0, 0.64, 0]}>
+            <sphereGeometry args={[0.055, 12, 12]} />
+            <meshStandardMaterial
+              color="#f97316"
+              emissive="#ea580c"
+              emissiveIntensity={2.5}
+              roughness={0.1}
+            />
+          </mesh>
+          {/* Flame: Inner Hot Yellow Core */}
+          <mesh position={[0, 0.63, 0]}>
+            <sphereGeometry args={[0.032, 10, 10]} />
+            <meshStandardMaterial
+              color="#fef08a"
+              emissive="#fef08a"
+              emissiveIntensity={4}
+              roughness={0.1}
+            />
+          </mesh>
+          {/* Dynamic Light Cast by Candle */}
+          <pointLight
+            ref={(el) => {
+              if (el) flameLightsRef.current[idx] = el;
+            }}
+            position={[0, 0.68, 0]}
+            color="#f59e0b"
+            distance={2.5}
+            intensity={isCelebrating ? 3.5 : 1.8}
+          />
         </group>
       ))}
     </group>
@@ -229,12 +440,14 @@ const EruptionParticles: React.FC<{ isErupting: boolean }> = ({ isErupting }) =>
 };
 
 export const Interactive3DPanel: React.FC = () => {
-  const [modelType, setModelType] = useState<'heart' | 'volcano' | 'cake'>('heart');
+  const [modelType, setModelType] = useState<'heart' | 'volcano' | 'cake'>('cake');
   const [isErupting, setIsErupting] = useState(false);
   const [burstCount, setBurstCount] = useState(0);
 
   const handleErupt = () => {
-    if (modelType === 'heart') {
+    if (modelType === 'cake') {
+      sound.playCelebrationSoftSound();
+    } else if (modelType === 'heart') {
       sound.playPop();
     } else {
       sound.playVolcanoEruption();
@@ -256,8 +469,8 @@ export const Interactive3DPanel: React.FC = () => {
         <div className="px-3 py-1.5 rounded-full bg-zinc-800/80 backdrop-blur-md border border-zinc-700 text-xs font-semibold text-zinc-200 flex items-center gap-1.5 pointer-events-auto shadow-sm">
           {modelType === 'heart' && (
             <>
-              <Heart className="w-3.5 h-3.5 text-rose-400 fill-rose-400/40 animate-pulse" />
-              <span>Interactive 3D Love ✨</span>
+              <Gamepad2 className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
+              <span>Interactive 3D Wonder ✨</span>
             </>
           )}
           {modelType === 'volcano' && (
@@ -269,7 +482,7 @@ export const Interactive3DPanel: React.FC = () => {
           {modelType === 'cake' && (
             <>
               <Cake className="w-3.5 h-3.5 text-pink-400" />
-              <span>Birthday Cake 3D Model 🎂</span>
+              <span>Celebration Cake 3D Model 🎂</span>
             </>
           )}
         </div>
@@ -281,14 +494,14 @@ export const Interactive3DPanel: React.FC = () => {
               sound.playPop();
               setModelType('heart');
             }}
-            title="Interactive 3D Love (Default)"
+            title="Interactive 3D Wonder (Default)"
             className={`p-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
               modelType === 'heart'
                 ? 'bg-rose-500 text-white shadow-sm'
                 : 'text-zinc-400 hover:text-zinc-200'
             }`}
           >
-            <Heart className="w-3.5 h-3.5" />
+            <Gamepad2 className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={() => {
@@ -328,22 +541,24 @@ export const Interactive3DPanel: React.FC = () => {
         ) : (
           <div className="w-full h-full cursor-grab active:cursor-grabbing">
             <Canvas
-              camera={{ position: [0, 1.8, 3.8], fov: 45 }}
+              camera={{ position: [0, 2.0, 4.4], fov: 45 }}
               gl={{ antialias: true, alpha: true }}
             >
-              <ambientLight intensity={0.7} />
-              <directionalLight position={[4, 5, 3]} intensity={1.4} castShadow />
-              <pointLight position={[0, 2, 0]} color="#ff5722" intensity={isErupting ? 4 : 2} />
-              <pointLight position={[-3, -1, -2]} color="#6366f1" intensity={0.8} />
+              <ambientLight intensity={0.75} />
+              <directionalLight position={[4, 6, 3]} intensity={1.5} castShadow />
+              <pointLight position={[0, 2.2, 0]} color="#ffedd5" intensity={isErupting ? 3.5 : 1.8} />
+              <pointLight position={[-3, -1, -2]} color="#6366f1" intensity={0.6} />
 
-              <Float speed={1.5} rotationIntensity={0.2} floatIntensity={0.3}>
+              <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.25}>
                 {modelType === 'volcano' && (
                   <>
                     <MiniVolcanoModel isErupting={isErupting} onInteract={handleErupt} />
                     <EruptionParticles isErupting={isErupting} />
                   </>
                 )}
-                {modelType === 'cake' && <BirthdayCakeModel onInteract={handleErupt} />}
+                {modelType === 'cake' && (
+                  <BirthdayCakeModel isCelebrating={isErupting} onInteract={handleErupt} />
+                )}
               </Float>
 
               <Sparkles count={35} scale={4} size={2.5} speed={0.4} color="#f59e0b" opacity={0.6} />
@@ -367,8 +582,8 @@ export const Interactive3DPanel: React.FC = () => {
         >
           {modelType === 'heart' ? (
             <>
-              <Heart className="w-3.5 h-3.5 fill-white/60" />
-              <span>Tap to Send Joyful Love! 💖 {burstCount > 0 ? `(${burstCount})` : ''}</span>
+              <SparklesIcon className="w-3.5 h-3.5 fill-white/60" />
+              <span>Tap to Trigger Magic Sparks! ✨ {burstCount > 0 ? `(${burstCount})` : ''}</span>
             </>
           ) : modelType === 'volcano' ? (
             <>

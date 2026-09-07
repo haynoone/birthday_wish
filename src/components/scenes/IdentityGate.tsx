@@ -141,10 +141,10 @@ export const IdentityGate: React.FC<IdentityGateProps> = ({ onSuccess }) => {
             {isSuccess ? (
               <>
                 <Sparkles className="w-5 h-5 text-emerald-200" />
-                <span>Identity Confirmed! Entering...</span>
+                <span>Bingo! You cracked it! Opening... 🎉</span>
               </>
             ) : (
-              <span>Enter</span>
+              <span>Unlock the Surprise ✨</span>
             )}
           </motion.button>
         </motion.form>

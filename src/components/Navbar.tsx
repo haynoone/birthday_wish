@@ -33,7 +33,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentScene, onJumpToScene }) =
             <Flame className="w-3.5 h-3.5" />
           </div>
           <span className="text-xs font-bold text-zinc-900 dark:text-zinc-100 font-['Outfit',sans-serif]">
-            Sadia's Birthday
+            Sadia's Special Surprise
           </span>
           <span className="text-[10px] text-rose-500 font-semibold hidden sm:inline">
             • Lil Valcano🌋

@@ -350,6 +350,52 @@ class SoundEngine {
     }
   }
 
+  // Soft, lush celebration chord & magical chime arpeggio for celebration effects
+  public playCelebrationSoftSound() {
+    if (this.isMuted) return;
+    try {
+      const ctx = this.getAudioContext();
+      const now = ctx.currentTime;
+
+      // Soft warm bass anchor
+      const bassOsc = ctx.createOscillator();
+      const bassGain = ctx.createGain();
+      bassOsc.type = 'sine';
+      bassOsc.frequency.setValueAtTime(261.63, now); // C4 warm root
+      bassGain.gain.setValueAtTime(0, now);
+      bassGain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+      bassGain.gain.exponentialRampToValueAtTime(0.0005, now + 1.2);
+      bassOsc.connect(bassGain);
+      bassGain.connect(ctx.destination);
+      bassOsc.start(now);
+      bassOsc.stop(now + 1.25);
+
+      // Sweet sparkling music-box chime notes (E5, G5, B5, D6, G6, B6)
+      const chimeNotes = [659.25, 783.99, 987.77, 1174.66, 1567.98, 1975.53];
+      chimeNotes.forEach((freq, idx) => {
+        const noteTime = now + idx * 0.07;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        // Alternating sine and triangle for sparkling bell-like warmth
+        osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        osc.frequency.setValueAtTime(freq, noteTime);
+
+        gain.gain.setValueAtTime(0, noteTime);
+        gain.gain.linearRampToValueAtTime(0.07, noteTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0005, noteTime + 0.85);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(noteTime);
+        osc.stop(noteTime + 0.9);
+      });
+    } catch {
+      // ignore
+    }
+  }
+
   // Wrong guess gentle boop
   public playBuzzer() {
     if (this.isMuted) return;

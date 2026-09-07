@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Spline from '@splinetool/react-spline';
 import type { Application } from '@splinetool/runtime';
-import { Heart, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2 } from 'lucide-react';
 
 interface SplineLoveSceneProps {
   sceneUrl?: string;
@@ -113,10 +113,10 @@ export const SplineLoveScene: React.FC<SplineLoveSceneProps> = ({
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-zinc-950/80 backdrop-blur-sm gap-3">
           <div className="relative">
             <Loader2 className="w-8 h-8 text-rose-500 animate-spin" />
-            <Heart className="w-4 h-4 text-rose-400 absolute inset-0 m-auto animate-pulse" />
+            <Sparkles className="w-4 h-4 text-amber-300 absolute inset-0 m-auto animate-pulse" />
           </div>
           <span className="text-xs font-semibold text-zinc-300 tracking-wide">
-            Loading Interactive 3D Love Element...
+            Loading Interactive 3D Scene... ✨
           </span>
         </div>
       )}
@@ -138,7 +138,7 @@ export const SplineLoveScene: React.FC<SplineLoveSceneProps> = ({
         </div>
       ) : (
         <div className="text-center p-6 text-zinc-400">
-          <Heart className="w-10 h-10 text-rose-500/50 mx-auto mb-2" />
+          <Sparkles className="w-10 h-10 text-rose-500/50 mx-auto mb-2" />
           <p className="text-sm">Unable to load 3D scene</p>
         </div>
       )}

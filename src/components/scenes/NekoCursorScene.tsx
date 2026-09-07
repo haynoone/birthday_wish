@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { sound } from '../../utils/sound';
-import { Sparkles, Heart, ArrowRight, MousePointer, Compass } from 'lucide-react';
+import { Sparkles, ArrowRight, MousePointer, Compass, Smile } from 'lucide-react';
 import { NekoSprite, SPRITE_SETS } from '../neko/NekoKitten';
 
 interface NekoCursorSceneProps {
@@ -64,15 +64,15 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
         {/* Subtle accent header */}
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-300 border border-pink-200/60 dark:border-pink-800/40 mb-4">
           <Sparkles className="w-3.5 h-3.5 text-pink-500" />
-          <span>Interactive Desktop Companion</span>
+          <span>Your Mischievous Kitten Buddy 🐾</span>
         </div>
 
         <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif] tracking-tight">
-          Meet Neko, Your Birthday Pet! 🐾
+          Meet Neko! 🐾
         </h2>
 
         <p className="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
-          Neko has all 8-directional movement angles, alert poses, ear scratching, and sweet snoozing! Move your cursor around to watch Neko follow you.
+          Meet your tiny four-legged sidekick! Neko loves to sprint after your cursor, do goofy cat naps, and groom like a boss. Wave your mouse around to take Neko for a spin!
         </p>
 
         {/* Neko Spotlight Display Box */}
@@ -94,7 +94,7 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
           <div className="flex flex-col items-center gap-2">
             <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
               <Compass className="w-3.5 h-3.5 text-pink-500" />
-              <span>Angle & Movement Compass:</span>
+              <span>Neko's Poses & Tricks:</span>
             </div>
 
             <div className="grid grid-cols-3 gap-1.5 max-w-[240px]">
@@ -141,26 +141,26 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2 border-t border-zinc-200/60 dark:border-zinc-700/60 w-full">
             <button
               onClick={handlePetAction}
-              className="px-4 py-2 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-xs font-bold border border-rose-200 dark:border-rose-800 hover:bg-rose-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-xs font-bold border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
-              <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
-              <span>Pet Neko {petCount > 0 ? `(${petCount} pets ❤️)` : ''}</span>
+              <Sparkles className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+              <span>Pet Neko {petCount > 0 ? `(${petCount} pets 🐾)` : ''}</span>
             </button>
 
             <div className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
               <MousePointer className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
-              <span>Move cursor anywhere to lead Neko</span>
+              <span>Move your cursor anywhere to guide Neko</span>
             </div>
           </div>
         </div>
 
-        {/* Advance to Memory Match Game */}
+        {/* Advance to 3D Playground & Special Notes */}
         <button
           id="neko-continue-btn"
           onClick={handleContinue}
           className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-base text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 mx-auto hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
-          <span>Continue to Birthday Memory Game 🎮</span>
+          <span>Continue to 3D Playground & Notes 🕹️</span>
           <ArrowRight className="w-4 h-4" />
         </button>
       </div>

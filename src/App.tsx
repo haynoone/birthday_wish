@@ -165,10 +165,10 @@ export const App: React.FC = () => {
     }
   }, [currentRoute, currentScene]);
 
-  // Neko kitten overlay is active in nekoCursor and subsequent scenes
+  // Neko kitten overlay is active in nekoCursor, terminalMessage3D, and subsequent scenes
   const isNekoActive =
     currentRoute === '/experience' &&
-    ['nekoCursor', 'memoryMatchGame', 'giftReveal'].includes(currentScene);
+    ['nekoCursor', 'terminalMessage3D', 'memoryMatchGame', 'giftReveal'].includes(currentScene);
 
   // 1) LOCKED LANDING ROUTE (/)
   if (currentRoute === '/') {
@@ -242,7 +242,7 @@ export const App: React.FC = () => {
               text={experienceConfig.introTexts.intro1}
               autoAdvanceDelay={2500}
               onNext={advanceToNextScene}
-              badgeText="A Special Birthday Message ✨"
+              badgeText="A Special Message ✨"
             />
           )}
 
@@ -253,7 +253,7 @@ export const App: React.FC = () => {
               text={experienceConfig.introTexts.intro2}
               autoAdvanceDelay={2500}
               onNext={advanceToNextScene}
-              badgeText="October 28 • Happy Birthday!"
+              badgeText="Just For You ✨"
             />
           )}
 
@@ -303,7 +303,7 @@ export const App: React.FC = () => {
 
       {/* Subtle Footer with frosted glass backdrop */}
       <footer className="w-full py-3 text-center text-xs font-medium text-zinc-700 dark:text-zinc-300 bg-white/50 dark:bg-black/40 backdrop-blur-md border-t border-white/40 dark:border-white/10 flex items-center justify-center gap-4">
-        <span>Crafted with ☕ for Sadia (“Lil Valcano🌋”) • Birthday: October 28</span>
+        <span>Crafted with ☕ for Sadia (“Lil Valcano🌋”) • Keep shining ✨</span>
       </footer>
     </div>
   );

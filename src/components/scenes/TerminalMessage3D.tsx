@@ -36,13 +36,15 @@ export const TerminalMessage3D: React.FC<TerminalMessage3DProps> = ({ onNext }) 
       <div className="text-center mb-6 sm:mb-8">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-500 border border-rose-500/20 mb-3">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Birthday Terminal & 3D Center</span>
+          <span>Special Thoughts & 3D Playground 🎮</span>
+          <span className="text-zinc-300 dark:text-zinc-700">•</span>
+          <span className="text-zinc-600 dark:text-zinc-300">Neko's Tagging Along 🐾</span>
         </div>
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif]">
-          A Special Birthday Transmission
+          A Little Note For You! 🎉
         </h2>
         <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 max-w-md mx-auto">
-          Incoming messages decoded in real-time alongside your interactive 3D love element 💖
+          Fun thoughts rolling in just for you, plus a neat 3D toy you can spin around! 🕹️✨
         </p>
       </div>
 
@@ -77,11 +79,11 @@ export const TerminalMessage3D: React.FC<TerminalMessage3DProps> = ({ onNext }) 
           onClick={handleNext}
           className="group px-7 py-3.5 rounded-full font-bold text-base text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-xl shadow-rose-500/25 flex items-center gap-2.5 transition-all hover:scale-105 active:scale-95 cursor-pointer"
         >
-          <span>Continue to Birthday Companion 🐾</span>
+          <span>Continue to Memory Game 🧩</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
         <span className="text-xs text-zinc-400">
-          {isTerminalDone ? '✨ All messages loaded!' : 'You can proceed whenever you are ready'}
+          {isTerminalDone ? '✨ All messages loaded!' : 'Feel free to jump ahead whenever you are ready!'}
         </span>
       </motion.div>
     </motion.div>

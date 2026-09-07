@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
-import confetti from 'canvas-confetti';
 import { experienceConfig } from '../../config/experienceConfig';
 import { sound } from '../../utils/sound';
+import { triggerCelebration } from '../../utils/celebration';
 import {
   Volume2,
   VolumeX,
@@ -24,39 +24,18 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart }) => {
   const gift = experienceConfig.finalGift;
 
   useEffect(() => {
-    // Grand celebratory confetti burst
-    sound.playSuccessChime();
-
-    const duration = 3 * 1000;
-    const end = Date.now() + duration;
-
-    const frame = () => {
-      confetti({
-        particleCount: 4,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#f43f5e', '#fb7185', '#f59e0b', '#10b981', '#a855f7'],
-      });
-      confetti({
-        particleCount: 4,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#f43f5e', '#fb7185', '#f59e0b', '#10b981', '#a855f7'],
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
-    frame();
+    // Grand celebration sequence with detailed multi-tier confetti and soft chime
+    triggerCelebration({ intensity: 'grand', playSound: true });
+    const timer = setTimeout(() => {
+      triggerCelebration({ intensity: 'gentle', playSound: false });
+    }, 1400);
+    return () => clearTimeout(timer);
   }, []);
 
   // Voice narration using window.speechSynthesis
   const handlePlayVoice = () => {
     if (!('speechSynthesis' in window)) {
-      alert('Speech synthesis is not supported on this browser.');
+      console.warn('Speech synthesis is not supported on this browser.');
       return;
     }
 
@@ -97,13 +76,7 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart }) => {
   };
 
   const triggerMoreConfetti = () => {
-    sound.playPop();
-    confetti({
-      particleCount: 120,
-      spread: 90,
-      origin: { y: 0.5 },
-      colors: ['#f43f5e', '#ec4899', '#f59e0b', '#fbbf24', '#8b5cf6'],
-    });
+    triggerCelebration({ intensity: 'normal', playSound: true });
   };
 
   return (
@@ -224,7 +197,7 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart }) => {
               className="inline-flex items-center gap-2 text-xs font-semibold text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors py-2 px-4 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Replay the Birthday Experience</span>
+              <span>Replay the Special Experience ✨</span>
             </button>
           </div>
         </div>

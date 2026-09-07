@@ -21,11 +21,11 @@ export const experienceConfig: ExperienceConfig = {
    *   By default, this is parsed in the celebrant/visitor's local browser timezone.
    *   To enforce a specific timezone (e.g. Bangladesh GMT+6 or EST), append an ISO offset like "+06:00":
    *   e.g. "2026-10-28T00:00:00+06:00"
-   * - unlockPassword: "izel_sadia_is_hates_me"
+   * - unlockPassword: "izel_sadia_hates_me"
    *   Static password allowing early access via the /login page.
    */
   unlockDate: '2026-10-28T00:00:00',
-  unlockPassword: 'izel_sadia_is_hates_me',
+  unlockPassword: 'izel_sadia_hates_me',
 
   // Exact scene flow order
   scenes: [
@@ -33,8 +33,8 @@ export const experienceConfig: ExperienceConfig = {
     'intro2',
     'identityGate',
     'excitementCheck',
-    'terminalMessage3D',
     'nekoCursor',
+    'terminalMessage3D',
     'memoryMatchGame',
     'giftReveal',
   ],
@@ -63,13 +63,13 @@ export const experienceConfig: ExperienceConfig = {
 
   // Terminal sequential lines
   terminalMessages: [
-    'Hey you 💞',
+    'Hey you ✨',
     'Happy Birthday 🎈',
     'May God bless you 🍀',
-    'And give u many happiness 💕',
-    'Just saying… you’re pretty awesome ❤️',
-    'Sending good vibes and maybe a wink 😏',
-    'Hope u have a great day today ❤️✨',
+    'And give u endless happiness 🎉',
+    'Just saying… you’re pretty awesome ⭐',
+    'Sending good vibes and huge cheers 😎',
+    'Hope u have the most epic day today 🎂✨',
   ],
 
   // Memory card matching game pairs (4 pairs = 8 cards total)
@@ -124,11 +124,13 @@ export const experienceConfig: ExperienceConfig = {
     subtitle: 'To the one and only Lil Valcano 🌋✨',
     message: `Dear Sadia,
 
-Happy Birthday! 🎂 Today is all about celebrating the wonderful, radiant energy you bring into the world. You’re truly one of a kind—explosive with positivity, heartwarming laughs, and endless kindness (truly living up to the Lil Valcano name! 🌋).
+Happy Birthday! 🎂 Today is all about celebrating the wonderful, radiant energy you bring into the world. You’re truly one of a kind—explosive with positivity, heartwarming laughs, and endless kindness.
 
 May this year bring you heaps of genuine happiness, glowing health, successful milestones, and unforgettable memories. God bless you always!
 
-Keep shining, keep smiling, and never stop being your authentic awesome self. ❤️`,
+Thank you for being such a wonderful friend to me for more than a year...
+
+Keep shining, keep smiling, and never stop being the kind soul who cares for and protects every cat you find. 🐱❤️🌟`,
     link: {
       label: 'Open Your Surprise Playlist & Memories 🎁',
       url: 'https://open.spotify.com',

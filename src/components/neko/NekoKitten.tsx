@@ -335,7 +335,7 @@ export const NekoKitten: React.FC<NekoKittenProps> = ({ enabled = true }) => {
       sound.playPop();
 
       // Show temporary reaction
-      const reactions = ['❤️ purrr~', '🐾 meow!', '✨ nya~', '🥰 *happy*', '💖 *headbutt*'];
+      const reactions = ['😺 purrr~', '🐾 meow!', '✨ nya~', '😸 *happy*', '⭐ *headbutt*'];
       const chosen = reactions[Math.floor(Math.random() * reactions.length)];
       setPetReaction(chosen);
 

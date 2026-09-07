@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { RunawayButton } from '../common/RunawayButton';
 import { sound } from '../../utils/sound';
-import { Heart, Sparkles } from 'lucide-react';
+import { PartyPopper, Sparkles } from 'lucide-react';
 import { BoxBottomFlame } from '../common/BoxBottomFlame';
+import { triggerCelebration } from '../../utils/celebration';
 
 interface ExcitementCheckProps {
   onYes: () => void;
@@ -21,7 +22,7 @@ const FUNNY_EVASION_MESSAGES = [
   'The button has supersonic evasive maneuvers! 🚀',
   'Resistance is futile! Click YES! 🎉',
   'Even NASA couldn’t calculate where this button lands! 🛸',
-  'Plot twist: the YES button has been waiting for you all along ❤️',
+  'Plot twist: the YES button has been waiting for you all along 🎉',
   'Your determination is legendary, but futile! 😜',
   'Did you seriously think you could outsmart this button? 😏',
   'I could do this evasive dance all day! 🛡️',
@@ -31,14 +32,14 @@ const FUNNY_EVASION_MESSAGES = [
   'Look closely... the YES button is literally glowing for you! ✨',
   'Blink and you missed it again! 👀',
   'The laws of physics do not apply to this No button! 🌌',
-  'Come on, deep down you know you want to click YES! 🥰',
+  'Come on, deep down you know you want to click YES! 😎',
 ];
 
 export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
   const [attempts, setAttempts] = useState(0);
 
   const handleYes = () => {
-    sound.playSuccessChime();
+    triggerCelebration({ intensity: 'normal', playSound: true });
     // Start background music looping on user gesture as specified
     sound.startMusic();
     onYes();
@@ -83,7 +84,7 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
           }}
           className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 mx-auto flex items-center justify-center text-white shadow-lg shadow-rose-500/30 mb-6"
         >
-          <Heart className="w-8 h-8 fill-white" />
+          <PartyPopper className="w-8 h-8" />
         </motion.div>
 
         {/* Text */}
@@ -117,7 +118,7 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
             className="px-9 py-4 rounded-full font-bold text-base sm:text-lg text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-xl shadow-rose-500/30 flex items-center gap-2.5 cursor-pointer transition-all"
           >
             <Sparkles className="w-5 h-5 text-amber-200" />
-            <span>Yes, of course! ❤️</span>
+            <span>Yes, of course! 🎉</span>
           </motion.button>
 
           {/* RUNAWAY NO Button */}
@@ -136,7 +137,7 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
             animate={{ opacity: 1 }}
             className="mt-8 text-xs sm:text-sm text-zinc-400 font-medium"
           >
-            Runaway attempts: <span className="font-mono font-bold text-rose-400">{attempts}</span>
+            Button chase attempts: <span className="font-mono font-bold text-rose-400">{attempts} 🏃💨</span>
           </motion.p>
         )}
 
