@@ -1,6 +1,6 @@
 {
-  "name": "Sadia's Birthday Surprise",
-  "description": "An interactive surprise birthday experience for Sadia (Lil Valcano) with interactive scenes, mini 3D volcano, neko kitten companion, memory game, and gift reveal.",
+  "name": "Sadia's Special Surprise ✨",
+  "description": "An interactive surprise mystery experience for Sadia (Lil Valcano) with special memories, 3D interactive moments, and surprises.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

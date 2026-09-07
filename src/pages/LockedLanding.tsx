@@ -129,7 +129,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-amber-400 animate-spin" />
               <span className="text-amber-300 font-semibold">Ready to Unbox</span>
               <span className="text-zinc-500">•</span>
-              <span className="text-zinc-300">Birthday Surprise</span>
+              <span className="text-zinc-300">Special Surprise ✨</span>
             </>
           ) : (
             <>
@@ -137,9 +137,9 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
               </span>
-              <span>Top-Secret Birthday Vault 🤫</span>
+              <span>Top-Secret Mystery 🤫</span>
               <span className="text-zinc-500">•</span>
-              <span className="text-zinc-400">October 28</span>
+              <span className="text-zinc-400">Locked Tight</span>
             </>
           )}
         </motion.div>
@@ -243,8 +243,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="mt-3 sm:mt-4 text-base sm:text-lg text-zinc-300 max-w-lg leading-relaxed"
               >
-                No peeking allowed until{' '}
-                <span className="text-amber-300 font-medium">October 28</span>! Hands off, we're watching you 👀
+                No peeking allowed until the timer hits zero! Hands off, we're watching you 👀
               </motion.p>
             )}
           </AnimatePresence>
@@ -283,7 +282,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
               transition={{ duration: 0.6, delay: 0.55 }}
               className="mt-6 text-xs text-zinc-400 tracking-wide font-medium"
             >
-              Bursting open the exact second midnight strikes on your clock ⏰ (party hats mandatory!)
+              Unlocking the exact second the countdown reaches zero ⏰ (no rushing the magic!)
             </motion.p>
           )}
         </motion.div>

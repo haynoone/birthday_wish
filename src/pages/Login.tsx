@@ -40,7 +40,7 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
       }, 400);
     } else {
       sound.playBuzzer();
-      setError("That’s not the right key… 🔒");
+      setError("Nice try, but nope! 🙅‍♀️ That's not the magic word");
     }
   };
 
@@ -75,8 +75,8 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
           <span>Back to countdown</span>
         </button>
 
-        <span className="text-[11px] text-zinc-600 uppercase tracking-widest font-mono">
-          VIP Bypass
+        <span className="text-[11px] text-zinc-500 tracking-wider font-mono">
+          Sneak Mode 🕵️
         </span>
       </header>
 
@@ -100,10 +100,10 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
             id="login-title"
             className="text-2xl font-bold text-center tracking-tight text-white"
           >
-            Access Pass
+            VIP Sneak Peek 🤫
           </h2>
-          <p className="text-xs text-center text-zinc-400 mt-1 mb-6">
-            Enter the secret key to unlock the experience early
+          <p className="text-xs text-center text-zinc-300 mt-1.5 mb-6">
+            Got the magic password, or are you just boldly guessing? 😜
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -116,7 +116,7 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
                   setPassword(e.target.value);
                   if (error) setError('');
                 }}
-                placeholder="Enter password..."
+                placeholder="Type the magic word..."
                 autoFocus
                 disabled={isSubmitting}
                 className="w-full py-3 px-4 pr-11 rounded-xl bg-zinc-950/70 border border-zinc-800 focus:border-amber-400/80 focus:ring-2 focus:ring-amber-500/20 text-sm text-zinc-100 placeholder-zinc-500 outline-none transition-all"
@@ -159,12 +159,12 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
               {isSubmitting ? (
                 <>
                   <Unlock className="w-4 h-4 animate-spin" />
-                  <span>Unlocking...</span>
+                  <span>Sneaking in...</span>
                 </>
               ) : (
                 <>
                   <Unlock className="w-4 h-4" />
-                  <span>Unlock</span>
+                  <span>Let Me In! ✨</span>
                 </>
               )}
             </motion.button>
@@ -172,16 +172,16 @@ export const Login: React.FC<LoginProps> = ({ onBack, onSuccess }) => {
 
           {/* Small hint footer inside card */}
           <div className="mt-6 pt-4 border-t border-zinc-800/80 text-center">
-            <span className="text-[11px] text-zinc-500">
-              Only for Sadia and authorized guests 🔑
+            <span className="text-[11px] text-zinc-400">
+              Creator & bug-checking access only 🛠️ (Sadia, no snooping allowed!)
             </span>
           </div>
         </motion.div>
       </main>
 
       {/* Bottom spacer */}
-      <footer className="w-full py-4 text-center text-[11px] text-zinc-600 z-10">
-        <span>Protected Capsule</span>
+      <footer className="w-full py-4 text-center text-[11px] text-zinc-500 z-10">
+        <span>Top-Secret Vault 🔒</span>
       </footer>
     </div>
   );
