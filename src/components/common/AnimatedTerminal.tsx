@@ -81,26 +81,26 @@ export const AnimatedTerminal: React.FC<AnimatedTerminalProps> = ({
   return (
     <div
       id="animated-terminal-container"
-      className={`flex flex-col bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden font-mono text-xs sm:text-sm ${className}`}
+      className={`flex flex-col bg-zinc-950 rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden font-mono text-[11px] sm:text-sm ${className}`}
     >
       {/* macOS Style Title Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-zinc-900 border-b border-zinc-800 select-none">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-rose-500/80 border border-rose-600" />
-          <div className="w-3 h-3 rounded-full bg-amber-500/80 border border-amber-600" />
-          <div className="w-3 h-3 rounded-full bg-emerald-500/80 border border-emerald-600" />
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 sm:py-3 bg-zinc-900 border-b border-zinc-800 select-none">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500/80 border border-rose-600" />
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500/80 border border-amber-600" />
+          <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500/80 border border-emerald-600" />
         </div>
 
-        <div className="flex items-center gap-1.5 text-zinc-400 text-xs font-semibold">
+        <div className="flex items-center gap-1.5 text-zinc-400 text-[11px] sm:text-xs font-semibold">
           <Terminal className="w-3.5 h-3.5 text-rose-400" />
-          <span>valcano@fun-notes:~</span>
+          <span className="truncate">valcano@fun-notes:~</span>
         </div>
 
         <div className="flex items-center gap-2">
           {!isFinished ? (
             <button
               onClick={handleSkipAll}
-              className="text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
+              className="text-[10px] sm:text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
             >
               Skip
             </button>
@@ -117,7 +117,7 @@ export const AnimatedTerminal: React.FC<AnimatedTerminalProps> = ({
       </div>
 
       {/* Terminal Body */}
-      <div className="p-5 min-h-[260px] sm:min-h-[300px] flex flex-col justify-start space-y-3 overflow-y-auto">
+      <div className="p-3.5 sm:p-5 min-h-[220px] sm:min-h-[300px] flex flex-col justify-start space-y-2.5 sm:space-y-3 overflow-y-auto">
         <div className="text-zinc-500 text-xs select-none">
           Special thoughts loaded ✨ • Good vibes only
         </div>

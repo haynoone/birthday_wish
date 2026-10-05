@@ -117,12 +117,12 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
       <AsciiOverlay />
 
       {/* Top subtle bar / status */}
-      <header className="w-full pt-8 px-6 flex justify-center z-10 pointer-events-none">
+      <header className="w-full pt-5 sm:pt-8 px-4 sm:px-6 flex justify-center z-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900/60 backdrop-blur-md border border-white/10 text-xs font-medium text-amber-200/90 shadow-lg"
+          className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full bg-zinc-900/60 backdrop-blur-md border border-white/10 text-[11px] sm:text-xs font-medium text-amber-200/90 shadow-lg"
         >
           {hasReachedUnlockTime ? (
             <>
@@ -146,7 +146,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
       </header>
 
       {/* Central Hero & Countdown Section */}
-      <main className="w-full max-w-4xl px-4 py-8 sm:py-12 flex flex-col items-center text-center z-10 my-auto">
+      <main className="w-full max-w-4xl px-3.5 sm:px-4 py-6 sm:py-12 flex flex-col items-center text-center z-10 my-auto">
         <motion.div
           animate={
             isOpening
@@ -161,7 +161,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7, delay: 0.1, ease: 'easeOut' }}
-            className="relative mb-6"
+            className="relative mb-5 sm:mb-6"
           >
             <div
               className={`absolute -inset-3 bg-gradient-to-r ${
@@ -200,7 +200,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.5 }}
-                className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white max-w-2xl leading-[1.15] drop-shadow-sm"
+                className="text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white max-w-2xl leading-[1.15] drop-shadow-sm"
               >
                 It’s time 🎉
               </motion.h1>
@@ -212,7 +212,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white max-w-2xl leading-[1.15] drop-shadow-sm"
+                className="text-2xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white max-w-2xl leading-[1.15] drop-shadow-sm"
               >
                 Sorry you have to wait to see it…
               </motion.h1>
@@ -229,7 +229,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="mt-3 sm:mt-4 text-base sm:text-lg text-amber-200/90 font-medium max-w-lg"
+                className="mt-2.5 sm:mt-4 text-sm sm:text-lg text-amber-200/90 font-medium max-w-lg px-2"
               >
                 The countdown is over. Click anywhere to open your surprise.
               </motion.p>
@@ -241,7 +241,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
-                className="mt-3 sm:mt-4 text-base sm:text-lg text-zinc-300 max-w-lg leading-relaxed"
+                className="mt-2.5 sm:mt-4 text-sm sm:text-lg text-zinc-300 max-w-lg leading-relaxed px-2"
               >
                 No peeking allowed until the timer hits zero! Hands off, we're watching you 👀
               </motion.p>
@@ -253,7 +253,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="mt-8 sm:mt-12 w-full"
+            className="mt-6 sm:mt-12 w-full"
           >
             <CountdownTimer
               targetDate={experienceConfig.unlockDate}
@@ -267,7 +267,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
             <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-6 flex items-center gap-2 text-xs text-amber-300/80 font-mono tracking-wide"
+              className="mt-5 sm:mt-6 flex items-center gap-2 text-xs text-amber-300/80 font-mono tracking-wide"
             >
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
@@ -280,7 +280,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.55 }}
-              className="mt-6 text-xs text-zinc-400 tracking-wide font-medium"
+              className="mt-5 sm:mt-6 text-[11px] sm:text-xs text-zinc-400 tracking-wide font-medium px-2"
             >
               Unlocking the exact second the countdown reaches zero ⏰ (no rushing the magic!)
             </motion.p>
@@ -289,7 +289,7 @@ export const LockedLanding: React.FC<LockedLandingProps> = ({
       </main>
 
       {/* Footer & Discreet "Open" Button at bottom right (Hidden when hasReachedUnlockTime is true) */}
-      <footer className="w-full pb-6 pt-4 px-6 flex items-center justify-between z-20 text-xs text-zinc-500">
+      <footer className="w-full pb-4 sm:pb-6 pt-3 sm:pt-4 px-4 sm:px-6 flex items-center justify-between z-20 text-xs text-zinc-500">
         <div className="hidden sm:flex items-center gap-2">
           <Flame className="w-3.5 h-3.5 text-orange-500/70" />
           <span>Created with ☕</span>

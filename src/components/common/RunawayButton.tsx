@@ -36,21 +36,33 @@ export const RunawayButton: React.FC<RunawayButtonProps> = ({
     // Determine viewport constraints
     const button = buttonRef.current;
     const buttonRect = button?.getBoundingClientRect();
-    const btnWidth = buttonRect ? buttonRect.width : 100;
-    const btnHeight = buttonRect ? buttonRect.height : 45;
+    const btnWidth = buttonRect ? buttonRect.width : 90;
+    const btnHeight = buttonRect ? buttonRect.height : 44;
 
-    // Available space
-    const maxX = Math.min(window.innerWidth - btnWidth - 40, 320);
-    const maxY = Math.min(window.innerHeight - btnHeight - 40, 240);
+    const currentLeft = buttonRect ? buttonRect.left : window.innerWidth / 2;
+    const currentTop = buttonRect ? buttonRect.top : window.innerHeight / 2;
+
+    // Strict boundary limits to prevent horizontal page overflow or clipping
+    const minAllowedX = -(currentLeft - 20);
+    const maxAllowedX = window.innerWidth - (currentLeft + btnWidth) - 20;
+    const minAllowedY = -(currentTop - 80);
+    const maxAllowedY = window.innerHeight - (currentTop + btnHeight) - 60;
 
     // Pick random target offset away from current spot
     const randomSignX = Math.random() > 0.5 ? 1 : -1;
     const randomSignY = Math.random() > 0.5 ? 1 : -1;
 
-    const newX = (Math.random() * (maxX * 0.7) + 50) * randomSignX;
-    const newY = (Math.random() * (maxY * 0.7) + 40) * randomSignY;
+    const rawDistanceX = Math.random() * 140 + 70;
+    const rawDistanceY = Math.random() * 120 + 50;
 
-    setOffset({ x: newX, y: newY });
+    let targetX = rawDistanceX * randomSignX;
+    let targetY = rawDistanceY * randomSignY;
+
+    // Clamp strictly within viewport
+    targetX = Math.max(minAllowedX, Math.min(maxAllowedX, targetX));
+    targetY = Math.max(minAllowedY, Math.min(maxAllowedY, targetY));
+
+    setOffset({ x: targetX, y: targetY });
     const nextCount = evadeCountRef.current + 1;
     evadeCountRef.current = nextCount;
     setEvadeCount(nextCount);

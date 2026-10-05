@@ -13,6 +13,8 @@ import {
   Award,
   FastForward,
   CheckCircle2,
+  Maximize2,
+  X,
 } from 'lucide-react';
 
 interface MemoryMatchGameProps {
@@ -27,6 +29,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
   const [moves, setMoves] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [isWon, setIsWon] = useState(false);
+  const [previewPhoto, setPreviewPhoto] = useState<{ url: string; title: string; emoji: string } | null>(null);
 
   // Initialize and shuffle cards on mount
   const setupGame = () => {
@@ -152,7 +155,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.4 }}
-      className="w-full max-w-3xl mx-auto px-4 py-4 sm:py-6 flex flex-col items-center select-none"
+      className="w-full max-w-4xl mx-auto px-3 sm:px-6 py-4 sm:py-6 flex flex-col items-center select-none"
     >
       {/* Top Header Card */}
       <div className="w-full text-center mb-5">
@@ -169,7 +172,7 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
         </p>
 
         {/* Progress & Control Bar */}
-        <div className="mt-4 max-w-xl mx-auto flex flex-wrap items-center justify-between gap-2 p-2 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800 shadow-sm text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        <div className="mt-4 max-w-2xl mx-auto flex flex-wrap items-center justify-between gap-2 p-2 rounded-2xl bg-white/70 dark:bg-zinc-900/70 backdrop-blur-md border border-zinc-200/80 dark:border-zinc-800 shadow-sm text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-300">
           {/* Pairs Solved Medallion */}
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-zinc-100/80 dark:bg-zinc-800/80">
             <Award className="w-4 h-4 text-amber-500 shrink-0" />
@@ -227,8 +230,8 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
         </div>
       </div>
 
-      {/* Cards Grid: Responsive 2x4 on mobile, 4x2 on tablet/desktop */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full max-w-2xl px-1">
+      {/* Cards Grid: Sized for optimal clarity & full visibility */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 sm:gap-5 w-full max-w-3xl sm:max-w-4xl px-1">
         {cards.map((card) => {
           const isFlipped = flippedCards.includes(card.id) || matchedPairs.includes(card.pairId);
           const isMatched = matchedPairs.includes(card.pairId);
@@ -236,9 +239,9 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
           return (
             <motion.div
               key={card.id}
-              whileHover={!isFlipped ? { y: -4, scale: 1.02 } : {}}
+              whileHover={!isFlipped ? { y: -4, scale: 1.02 } : { y: -2 }}
               whileTap={!isFlipped ? { scale: 0.98 } : {}}
-              className="relative aspect-[3/4] cursor-pointer perspective-1000"
+              className="relative aspect-[1/1.22] sm:aspect-[1/1.2] cursor-pointer perspective-1000 group"
               onClick={() => handleCardClick(card)}
             >
               <motion.div
@@ -258,8 +261,8 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
                     <div className="absolute inset-0 opacity-15 bg-[radial-gradient(#f43f5e_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
                     
                     {/* Glowing Center Badge */}
-                    <div className="relative z-10 w-12 h-12 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/20 flex items-center justify-center shadow-inner mb-1.5 group-hover:scale-105 transition-transform">
-                      <span className="text-2xl filter drop-shadow-sm animate-pulse">✨</span>
+                    <div className="relative z-10 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-rose-500/20 to-amber-500/20 border border-white/20 flex items-center justify-center shadow-inner mb-1.5 group-hover:scale-105 transition-transform">
+                      <span className="text-xl sm:text-2xl filter drop-shadow-sm animate-pulse">✨</span>
                     </div>
 
                     <span className="relative z-10 text-[11px] font-bold text-zinc-100 tracking-wider uppercase font-['Outfit',sans-serif]">
@@ -279,48 +282,49 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
                   }}
                   className={`absolute inset-0 rounded-2xl p-[2px] shadow-lg flex flex-col overflow-hidden transition-all duration-300 ${
                     isMatched
-                      ? 'bg-gradient-to-br from-emerald-400 to-teal-500 ring-2 ring-emerald-400/60 shadow-emerald-500/20'
-                      : 'bg-gradient-to-br from-rose-400 to-amber-400'
+                      ? 'bg-gradient-to-br from-emerald-400 via-teal-400 to-emerald-500 ring-2 ring-emerald-400/80 shadow-emerald-500/25'
+                      : 'bg-gradient-to-br from-rose-400 to-amber-400 shadow-md'
                   }`}
                 >
                   <div className="w-full h-full rounded-[14px] bg-white dark:bg-zinc-900 overflow-hidden flex flex-col relative">
-                    {/* Card Photo */}
-                    <div className="relative flex-1 w-full overflow-hidden bg-zinc-100 dark:bg-zinc-800">
+                    {/* Card Photo: 1:1 square ratio for 100% full visibility with zero edge-cropping */}
+                    <div className="relative w-full aspect-square overflow-hidden bg-zinc-950 flex items-center justify-center">
                       <img
                         src={card.imageUrl}
                         alt={card.title}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.03]"
                         loading="lazy"
-                        onError={(e) => {
-                          (e.target as HTMLElement).style.display = 'none';
-                        }}
                       />
-                      {/* Floating Emoji Badge */}
-                      <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm flex items-center justify-center text-base shadow-sm border border-black/5 dark:border-white/10">
-                        {card.emoji}
-                      </div>
+
+                      {/* Matched Pill Badge: compact corner highlight so photo stays 100% visible */}
+                      {isMatched && (
+                        <div className="absolute top-1.5 left-1.5 px-2 py-0.5 rounded-full bg-emerald-500/90 text-white text-[10px] font-bold shadow-md backdrop-blur-xs flex items-center gap-1 border border-emerald-400/40">
+                          <CheckCircle2 className="w-3 h-3 text-white shrink-0" />
+                          <span>Matched</span>
+                        </div>
+                      )}
+
+                      {/* Full-view Zoom Lightbox button */}
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setPreviewPhoto({ url: card.imageUrl, title: card.title, emoji: card.emoji });
+                        }}
+                        title="View photo full size"
+                        className="absolute top-1.5 right-1.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-black/60 hover:bg-black/85 backdrop-blur-md text-white flex items-center justify-center opacity-75 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shadow-sm cursor-pointer"
+                      >
+                        <Maximize2 className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                      </button>
                     </div>
 
-                    {/* Card Title Label */}
-                    <div className="py-2 px-2 text-center bg-white/95 dark:bg-zinc-900/95 border-t border-zinc-100 dark:border-zinc-800">
-                      <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate block font-['Outfit',sans-serif]">
+                    {/* Card Title & Emoji Label Footer */}
+                    <div className="flex-1 w-full min-h-[32px] px-2 flex items-center justify-center gap-1.5 bg-white/95 dark:bg-zinc-900/95 border-t border-zinc-100 dark:border-zinc-800/80">
+                      <span className="text-xs">{card.emoji}</span>
+                      <span className="text-xs font-bold text-zinc-800 dark:text-zinc-200 truncate font-['Outfit',sans-serif]">
                         {card.title}
                       </span>
                     </div>
-
-                    {/* Matched Overlay Banner */}
-                    {isMatched && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="absolute inset-0 bg-emerald-950/40 backdrop-blur-[2px] flex items-center justify-center p-2"
-                      >
-                        <div className="bg-white/95 dark:bg-zinc-900/95 px-3 py-1.5 rounded-full text-xs font-bold text-emerald-600 dark:text-emerald-400 shadow-md flex items-center gap-1.5 border border-emerald-500/30">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                          <span>Matched!</span>
-                        </div>
-                      </motion.div>
-                    )}
                   </div>
                 </div>
               </motion.div>
@@ -356,6 +360,51 @@ export const MemoryMatchGame: React.FC<MemoryMatchGameProps> = ({ onWin }) => {
               <span>Open Final Surprise! 🎁</span>
               <ArrowRight className="w-4 h-4" />
             </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Full Photo Lightbox Preview Modal */}
+      <AnimatePresence>
+        {previewPhoto && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md"
+            onClick={() => setPreviewPhoto(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-w-md sm:max-w-lg w-full bg-zinc-900 rounded-3xl overflow-hidden border border-white/20 shadow-2xl flex flex-col"
+            >
+              <div className="p-3.5 px-4 flex items-center justify-between border-b border-white/10 bg-zinc-900/90">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">{previewPhoto.emoji}</span>
+                  <h4 className="text-sm font-bold text-white font-['Outfit',sans-serif]">
+                    {previewPhoto.title}
+                  </h4>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setPreviewPhoto(null)}
+                  className="w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="w-full aspect-square bg-black flex items-center justify-center overflow-hidden">
+                <img
+                  src={previewPhoto.url}
+                  alt={previewPhoto.title}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

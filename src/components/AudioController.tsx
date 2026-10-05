@@ -21,13 +21,13 @@ export const AudioController: React.FC = () => {
   return (
     <div
       id="audio-controller-wrapper"
-      className="fixed top-4 right-4 z-50 flex items-center gap-2"
+      className="fixed top-3 sm:top-4 right-3 sm:right-4 z-50 flex items-center gap-2"
     >
       <button
         id="audio-toggle-btn"
         onClick={handleToggle}
         title={isPlaying ? 'Pause Background Music' : 'Play Background Music'}
-        className={`group flex items-center gap-2 px-3 py-2 rounded-full border transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer ${
+        className={`group flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full border transition-all duration-300 shadow-md backdrop-blur-md cursor-pointer ${
           isPlaying
             ? 'bg-rose-500/15 border-rose-400/40 text-rose-600 dark:text-rose-300 hover:bg-rose-500/25'
             : 'bg-white/80 dark:bg-zinc-900/80 border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800'

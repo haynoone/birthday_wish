@@ -330,9 +330,9 @@ export const NekoKitten: React.FC<NekoKittenProps> = ({ enabled = true }) => {
 
   // Petting interaction
   const handlePetKitten = useCallback(
-    (e: React.MouseEvent) => {
+    (e: React.MouseEvent | React.TouchEvent) => {
       e.stopPropagation();
-      sound.playPop();
+      sound.playMeow();
 
       // Show temporary reaction
       const reactions = ['😺 purrr~', '🐾 meow!', '✨ nya~', '😸 *happy*', '⭐ *headbutt*'];

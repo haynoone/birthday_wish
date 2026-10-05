@@ -59,12 +59,12 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -12 }}
       transition={{ duration: 0.5 }}
-      className="relative flex flex-col items-center justify-center min-h-[80vh] px-6 text-center select-none"
+      className="relative flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[80vh] px-3 sm:px-6 text-center select-none w-full"
     >
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
-        className="relative w-full max-w-2xl sm:max-w-3xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 p-8 sm:p-14 overflow-visible"
+        className="relative w-full max-w-2xl sm:max-w-3xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 p-6 sm:p-14 overflow-visible"
       >
         {/* Liquid depth highlights */}
         <div className="absolute inset-0 bg-radial from-white/10 via-transparent to-transparent pointer-events-none rounded-3xl" />
@@ -82,17 +82,17 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
             duration: 2.2,
             ease: 'easeInOut',
           }}
-          className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 mx-auto flex items-center justify-center text-white shadow-lg shadow-rose-500/30 mb-6"
+          className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-tr from-rose-500 to-amber-400 mx-auto flex items-center justify-center text-white shadow-lg shadow-rose-500/30 mb-5 sm:mb-6"
         >
-          <PartyPopper className="w-8 h-8" />
+          <PartyPopper className="w-7 h-7 sm:w-8 sm:h-8" />
         </motion.div>
 
         {/* Text */}
-        <h2 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-zinc-100 font-['Outfit',sans-serif] tracking-tight leading-snug drop-shadow-md max-w-2xl mx-auto">
+        <h2 className="text-xl sm:text-4xl md:text-5xl font-extrabold text-zinc-100 font-['Outfit',sans-serif] tracking-tight leading-snug drop-shadow-md max-w-2xl mx-auto">
           Are you excited for what’s next?
         </h2>
 
-        <div className="mt-4 min-h-[32px] flex items-center justify-center max-w-xl mx-auto overflow-hidden">
+        <div className="mt-3 sm:mt-4 min-h-[32px] flex items-center justify-center max-w-xl mx-auto overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
               key={attempts}
@@ -100,7 +100,7 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -5, scale: 0.96 }}
               transition={{ duration: 0.2 }}
-              className="text-base sm:text-lg text-zinc-300 font-medium"
+              className="text-sm sm:text-lg text-zinc-300 font-medium px-2"
             >
               {getCheekyComment()}
             </motion.p>
@@ -108,14 +108,14 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
         </div>
 
         {/* Buttons container */}
-        <div className="mt-10 flex items-center justify-center gap-6 min-h-[70px] relative z-10">
+        <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 min-h-[70px] relative z-10 w-full max-w-md mx-auto">
           {/* YES Button */}
           <motion.button
             id="excitement-yes-btn"
             onClick={handleYes}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className="px-9 py-4 rounded-full font-bold text-base sm:text-lg text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-xl shadow-rose-500/30 flex items-center gap-2.5 cursor-pointer transition-all"
+            className="w-full sm:w-auto px-8 sm:px-9 py-3.5 sm:py-4 rounded-full font-bold text-base sm:text-lg text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-xl shadow-rose-500/30 flex items-center justify-center gap-2.5 cursor-pointer transition-all"
           >
             <Sparkles className="w-5 h-5 text-amber-200" />
             <span>Yes, of course! 🎉</span>
@@ -127,7 +127,7 @@ export const ExcitementCheck: React.FC<ExcitementCheckProps> = ({ onYes }) => {
             label="No 😅"
             proximityThreshold={85}
             onEvade={(count) => setAttempts(count)}
-            className="px-7 py-4 rounded-full font-medium text-base text-zinc-200 bg-zinc-800/80 hover:bg-zinc-700/90 border border-zinc-700/70 backdrop-blur-sm shadow-md transition-colors cursor-pointer"
+            className="w-full sm:w-auto px-6 sm:px-7 py-3.5 sm:py-4 rounded-full font-medium text-base text-zinc-200 bg-zinc-800/80 hover:bg-zinc-700/90 border border-zinc-700/70 backdrop-blur-sm shadow-md transition-colors cursor-pointer"
           />
         </div>
 

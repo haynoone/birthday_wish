@@ -18,6 +18,7 @@ import { EmbersBackground } from './components/EmbersBackground';
 import { AsciiOverlay } from './components/AsciiOverlay';
 import { LockedLanding } from './pages/LockedLanding';
 import { Login } from './pages/Login';
+import { MessageForTanvir } from './pages/MessageForTanvir';
 
 // Helper to check if experience was unlocked (via localStorage key)
 export const isUnlockedViaStorage = (): boolean => {
@@ -43,14 +44,20 @@ const getNormalizedRoute = (): string => {
   }
   if (path.startsWith('/login')) return '/login';
   if (path.startsWith('/experience')) return '/experience';
+  if (path.startsWith('/message-for-tanvir')) return '/message-for-tanvir';
   return '/';
 };
 
 export const App: React.FC = () => {
-  // Routing state ('/', '/login', '/experience')
+  // Routing state ('/', '/login', '/experience', '/message-for-tanvir')
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     const initialRoute = getNormalizedRoute();
     const unlocked = isUnlockedViaStorage();
+
+    // If directly requested /message-for-tanvir
+    if (initialRoute === '/message-for-tanvir') {
+      return '/message-for-tanvir';
+    }
 
     // If localStorage.sadiaBirthdayUnlocked === "true", go straight to /experience
     if (unlocked) {
@@ -92,6 +99,11 @@ export const App: React.FC = () => {
     const handleLocationChange = () => {
       const route = getNormalizedRoute();
       const unlocked = isUnlockedViaStorage();
+
+      if (route === '/message-for-tanvir') {
+        setCurrentRoute('/message-for-tanvir');
+        return;
+      }
 
       if (unlocked) {
         // Unlocked visitors go to /experience
@@ -152,11 +164,12 @@ export const App: React.FC = () => {
   // Dynamic soundtrack controller:
   // - Plays default music (src/assets/music/background.mp3) on Landing (/), Login (/login),
   //   and scenes before the Birthday Terminal (intro1, intro2, identityGate, excitementCheck)
-  // - Switches to birthday celebration music at the Birthday Terminal (terminalMessage3D) and subsequent scenes
+  // - Switches to birthday celebration music at the Birthday Terminal (terminalMessage3D) and subsequent scenes (including message page)
   useEffect(() => {
     const isBirthdayTerminalOrBeyond =
-      currentRoute === '/experience' &&
-      ['terminalMessage3D', 'nekoCursor', 'memoryMatchGame', 'giftReveal'].includes(currentScene);
+      (currentRoute === '/experience' &&
+        ['terminalMessage3D', 'nekoCursor', 'memoryMatchGame', 'giftReveal'].includes(currentScene)) ||
+      currentRoute === '/message-for-tanvir';
 
     if (isBirthdayTerminalOrBeyond) {
       sound.playBirthdayMusic(true);
@@ -165,10 +178,11 @@ export const App: React.FC = () => {
     }
   }, [currentRoute, currentScene]);
 
-  // Neko kitten overlay is active in nekoCursor, terminalMessage3D, and subsequent scenes
+  // Neko kitten overlay is active in nekoCursor, terminalMessage3D, subsequent scenes, and message page
   const isNekoActive =
-    currentRoute === '/experience' &&
-    ['nekoCursor', 'terminalMessage3D', 'memoryMatchGame', 'giftReveal'].includes(currentScene);
+    (currentRoute === '/experience' &&
+      ['nekoCursor', 'terminalMessage3D', 'memoryMatchGame', 'giftReveal'].includes(currentScene)) ||
+    currentRoute === '/message-for-tanvir';
 
   // 1) LOCKED LANDING ROUTE (/)
   if (currentRoute === '/') {
@@ -191,6 +205,22 @@ export const App: React.FC = () => {
         <Login
           onBack={() => navigate('/')}
           onSuccess={() => navigate('/experience')}
+        />
+      </>
+    );
+  }
+
+  // 3) FINAL MESSAGE FOR TANVIR ROUTE (/message-for-tanvir)
+  if (currentRoute === '/message-for-tanvir') {
+    return (
+      <>
+        <AudioController />
+        <NekoKitten enabled={isNekoActive} />
+        <MessageForTanvir
+          onBack={() => {
+            navigate('/experience');
+            setCurrentScene('giftReveal');
+          }}
         />
       </>
     );
@@ -221,10 +251,10 @@ export const App: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={goToPreviousScene}
-          className="fixed top-4 left-4 z-50 flex items-center gap-2 py-2 px-4 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-rose-200/70 dark:border-zinc-800 text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300 dark:hover:border-zinc-700 shadow-md hover:shadow-lg transition-all cursor-pointer select-none"
+          className="fixed top-3 sm:top-4 left-3 sm:left-4 z-50 flex items-center gap-1.5 sm:gap-2 py-1.5 sm:py-2 px-3 sm:px-4 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border border-rose-200/70 dark:border-zinc-800 text-xs sm:text-sm font-semibold text-zinc-700 dark:text-zinc-200 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-300 dark:hover:border-zinc-700 shadow-md hover:shadow-lg transition-all cursor-pointer select-none"
           title="Go back to previous page"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <span>Back</span>
         </motion.button>
       )}
@@ -233,7 +263,7 @@ export const App: React.FC = () => {
       <NekoKitten enabled={isNekoActive} />
 
       {/* Main Interactive Scene Stage */}
-      <main className="flex-1 flex items-center justify-center py-8 px-4 w-full">
+      <main className="flex-1 flex items-center justify-center pt-14 sm:pt-8 pb-8 px-2.5 sm:px-4 w-full">
         <AnimatePresence mode="wait">
           {currentScene === 'intro1' && (
             <IntroTypewriterPage
@@ -296,13 +326,14 @@ export const App: React.FC = () => {
             <GiftReveal
               key="giftReveal"
               onRestart={() => setCurrentScene('intro1')}
+              onNavigateToMessage={() => navigate('/message-for-tanvir')}
             />
           )}
         </AnimatePresence>
       </main>
 
       {/* Subtle Footer with frosted glass backdrop */}
-      <footer className="w-full py-3 text-center text-xs font-medium text-zinc-700 dark:text-zinc-300 bg-white/50 dark:bg-black/40 backdrop-blur-md border-t border-white/40 dark:border-white/10 flex items-center justify-center gap-4">
+      <footer className="w-full py-2.5 sm:py-3 px-3 text-center text-[11px] sm:text-xs font-medium text-zinc-700 dark:text-zinc-300 bg-white/50 dark:bg-black/40 backdrop-blur-md border-t border-white/40 dark:border-white/10 flex items-center justify-center gap-2 sm:gap-4 select-none">
         <span>Crafted with ☕ for Sadia (“Lil Valcano🌋”) • Keep shining ✨</span>
       </footer>
     </div>

@@ -52,7 +52,7 @@ export const IntroTypewriterPage: React.FC<IntroTypewriterPageProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className="relative flex flex-col items-center justify-center min-h-[80vh] px-6 text-center select-none"
+      className="relative flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[80vh] px-3 sm:px-6 text-center select-none w-full"
       onClick={handleSkip}
     >
       {/* Background ambient glow */}
@@ -65,7 +65,7 @@ export const IntroTypewriterPage: React.FC<IntroTypewriterPageProps> = ({
       <motion.div
         animate={{ y: [0, -6, 0] }}
         transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
-        className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 p-8 sm:p-14 md:p-16 overflow-hidden flex flex-col items-center"
+        className="relative w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-3xl border border-white/10 bg-gradient-to-b from-zinc-900/90 via-zinc-900/80 to-zinc-950/90 backdrop-blur-xl shadow-2xl shadow-black/50 p-6 sm:p-14 md:p-16 overflow-hidden flex flex-col items-center"
       >
         {/* Subtle liquid inner depth highlights */}
         <div className="absolute inset-0 bg-radial from-white/10 via-transparent to-transparent pointer-events-none rounded-3xl" />
@@ -77,15 +77,15 @@ export const IntroTypewriterPage: React.FC<IntroTypewriterPageProps> = ({
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.15, duration: 0.4 }}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-zinc-800/80 text-rose-300 border border-zinc-700/60 mb-8 shadow-sm backdrop-blur-sm"
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-zinc-800/80 text-rose-300 border border-zinc-700/60 mb-5 sm:mb-8 shadow-sm backdrop-blur-sm"
         >
           <Sparkles className="w-3.5 h-3.5 text-rose-400" />
           <span>{badgeText}</span>
         </motion.div>
 
         {/* Main typewriter text */}
-        <div className="max-w-2xl sm:max-w-3xl min-h-[120px] flex items-center justify-center relative z-10 px-4">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 font-['Outfit',sans-serif] leading-tight drop-shadow-md text-center">
+        <div className="max-w-2xl sm:max-w-3xl min-h-[90px] sm:min-h-[120px] flex items-center justify-center relative z-10 px-2 sm:px-4">
+          <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-100 font-['Outfit',sans-serif] leading-tight drop-shadow-md text-center">
             <TypingEffect
               text={text}
               speed={charSpeed}
@@ -97,7 +97,7 @@ export const IntroTypewriterPage: React.FC<IntroTypewriterPageProps> = ({
         </div>
 
         {/* Action prompt */}
-        <div className="mt-8 flex flex-col items-center gap-4 relative z-10">
+        <div className="mt-6 sm:mt-8 flex flex-col items-center gap-4 relative z-10">
           <button
             id={`skip-btn-${id}`}
             onClick={(e) => {

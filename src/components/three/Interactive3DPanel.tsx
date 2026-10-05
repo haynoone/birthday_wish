@@ -462,33 +462,33 @@ export const Interactive3DPanel: React.FC = () => {
   return (
     <div
       id="interactive-3d-panel"
-      className="relative w-full h-[380px] sm:h-[460px] bg-gradient-to-b from-zinc-900 via-zinc-950 to-black rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden flex flex-col"
+      className="relative w-full h-[340px] sm:h-[460px] bg-gradient-to-b from-zinc-900 via-zinc-950 to-black rounded-2xl border border-zinc-800 shadow-2xl overflow-hidden flex flex-col"
     >
       {/* Header controls & title */}
-      <div className="absolute top-3 left-3 right-3 z-10 flex items-center justify-between pointer-events-none">
-        <div className="px-3 py-1.5 rounded-full bg-zinc-800/80 backdrop-blur-md border border-zinc-700 text-xs font-semibold text-zinc-200 flex items-center gap-1.5 pointer-events-auto shadow-sm">
+      <div className="absolute top-2.5 sm:top-3 left-2.5 sm:left-3 right-2.5 sm:right-3 z-10 flex items-center justify-between gap-2 pointer-events-none">
+        <div className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-zinc-800/80 backdrop-blur-md border border-zinc-700 text-[11px] sm:text-xs font-semibold text-zinc-200 flex items-center gap-1.5 pointer-events-auto shadow-sm max-w-[65%] sm:max-w-none truncate">
           {modelType === 'heart' && (
             <>
-              <Gamepad2 className="w-3.5 h-3.5 text-pink-400 animate-pulse" />
-              <span>Interactive 3D Wonder ✨</span>
+              <Gamepad2 className="w-3.5 h-3.5 text-pink-400 animate-pulse shrink-0" />
+              <span className="truncate">3D Wonder ✨</span>
             </>
           )}
           {modelType === 'volcano' && (
             <>
-              <Flame className="w-3.5 h-3.5 text-orange-500 animate-pulse" />
-              <span>Lil Valcano 3D Playground 🌋</span>
+              <Flame className="w-3.5 h-3.5 text-orange-500 animate-pulse shrink-0" />
+              <span className="truncate">Lil Valcano 🌋</span>
             </>
           )}
           {modelType === 'cake' && (
             <>
-              <Cake className="w-3.5 h-3.5 text-pink-400" />
-              <span>Celebration Cake 3D Model 🎂</span>
+              <Cake className="w-3.5 h-3.5 text-pink-400 shrink-0" />
+              <span className="truncate">Celebration Cake 🎂</span>
             </>
           )}
         </div>
 
         {/* Model switcher tabs */}
-        <div className="flex items-center gap-1 bg-zinc-800/80 backdrop-blur-md p-1 rounded-xl border border-zinc-700 pointer-events-auto shadow-sm">
+        <div className="flex items-center gap-1 bg-zinc-800/80 backdrop-blur-md p-1 rounded-xl border border-zinc-700 pointer-events-auto shadow-sm shrink-0">
           <button
             onClick={() => {
               sound.playPop();
@@ -575,25 +575,25 @@ export const Interactive3DPanel: React.FC = () => {
       </div>
 
       {/* Bottom interactive CTA banner */}
-      <div className="absolute bottom-3 left-3 right-3 z-10 flex items-center justify-center pointer-events-none">
+      <div className="absolute bottom-2.5 sm:bottom-3 left-2.5 sm:left-3 right-2.5 sm:right-3 z-10 flex items-center justify-center pointer-events-none">
         <button
           onClick={handleErupt}
-          className="pointer-events-auto px-4 py-2 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white text-xs font-bold shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer"
+          className="pointer-events-auto px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white text-[11px] sm:text-xs font-bold shadow-lg shadow-rose-500/25 hover:scale-105 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer max-w-[95%] text-center"
         >
           {modelType === 'heart' ? (
             <>
-              <SparklesIcon className="w-3.5 h-3.5 fill-white/60" />
-              <span>Tap to Trigger Magic Sparks! ✨ {burstCount > 0 ? `(${burstCount})` : ''}</span>
+              <SparklesIcon className="w-3.5 h-3.5 fill-white/60 shrink-0" />
+              <span className="truncate">Tap for Magic Sparks! ✨ {burstCount > 0 ? `(${burstCount})` : ''}</span>
             </>
           ) : modelType === 'volcano' ? (
             <>
-              <SparklesIcon className="w-3.5 h-3.5" />
-              <span>Click to Erupt Joyful Sparks! ✨ {burstCount > 0 ? `(${burstCount})` : ''}</span>
+              <SparklesIcon className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Click to Erupt Sparks! ✨ {burstCount > 0 ? `(${burstCount})` : ''}</span>
             </>
           ) : (
             <>
-              <Cake className="w-3.5 h-3.5" />
-              <span>Make a Birthday Wish! 🎂 {burstCount > 0 ? `(${burstCount})` : ''}</span>
+              <Cake className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Make a Birthday Wish! 🎂 {burstCount > 0 ? `(${burstCount})` : ''}</span>
             </>
           )}
         </button>

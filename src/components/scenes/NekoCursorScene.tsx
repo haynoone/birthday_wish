@@ -27,7 +27,7 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
   };
 
   const handlePetAction = () => {
-    sound.playSuccessChime();
+    sound.playMeow('meow');
     setPetCount((prev) => prev + 1);
     setSelectedAngle('tired'); // Cute meow pose
   };
@@ -58,41 +58,46 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}
-      className="relative flex flex-col items-center justify-center min-h-[80vh] px-4 text-center select-none"
+      className="relative flex flex-col items-center justify-center min-h-[70vh] sm:min-h-[80vh] px-3 sm:px-4 text-center select-none w-full"
     >
-      <div className="w-full max-w-xl bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+      <div className="w-full max-w-xl bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800/80 rounded-3xl p-5 sm:p-10 shadow-2xl relative overflow-hidden">
         {/* Subtle accent header */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-300 border border-pink-200/60 dark:border-pink-800/40 mb-4">
+        <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-300 border border-pink-200/60 dark:border-pink-800/40 mb-3 sm:mb-4">
           <Sparkles className="w-3.5 h-3.5 text-pink-500" />
           <span>Your Mischievous Kitten Buddy 🐾</span>
         </div>
 
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif] tracking-tight">
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-zinc-900 dark:text-zinc-50 font-['Outfit',sans-serif] tracking-tight">
           Meet Neko! 🐾
         </h2>
 
-        <p className="mt-2 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
+        <p className="mt-2 text-xs sm:text-base text-zinc-600 dark:text-zinc-400 max-w-md mx-auto leading-relaxed">
           Meet your tiny four-legged sidekick! Neko loves to sprint after your cursor, do goofy cat naps, and groom like a boss. Wave your mouse around to take Neko for a spin!
         </p>
 
         {/* Neko Spotlight Display Box */}
-        <div className="my-6 p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/60 dark:border-zinc-700/60 flex flex-col items-center gap-4">
+        <div className="my-5 sm:my-6 p-3.5 sm:p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200/60 dark:border-zinc-700/60 flex flex-col items-center gap-3.5 sm:gap-4">
           {/* Animated Big Preview of Neko */}
-          <div className="relative flex flex-col items-center justify-center w-24 h-24 rounded-2xl bg-white dark:bg-zinc-900 shadow-inner border border-zinc-200/70 dark:border-zinc-700/70">
+          <button
+            type="button"
+            onClick={handlePetAction}
+            title="Click to pet Neko! 🐾"
+            className="relative flex flex-col items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-white dark:bg-zinc-900 shadow-inner border border-zinc-200/70 dark:border-zinc-700/70 cursor-pointer hover:scale-105 active:scale-95 transition-transform group"
+          >
             <NekoSprite
               state={selectedAngle}
               frame={animFrame}
-              size={64}
+              size={56}
               className="drop-shadow-md dark:drop-shadow-[0_0_2px_rgba(255,255,255,0.9)]"
             />
-            <span className="absolute bottom-1 text-[10px] font-bold text-zinc-400 uppercase tracking-wider">
+            <span className="absolute bottom-1 text-[9px] sm:text-[10px] font-bold text-zinc-400 group-hover:text-pink-500 uppercase tracking-wider transition-colors">
               {selectedAngle}
             </span>
-          </div>
+          </button>
 
           {/* 8-Directional Angle Compass Selector */}
           <div className="flex flex-col items-center gap-2">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-1.5 text-[11px] sm:text-xs font-semibold text-zinc-500 dark:text-zinc-400">
               <Compass className="w-3.5 h-3.5 text-pink-500" />
               <span>Neko's Poses & Tricks:</span>
             </div>
@@ -103,7 +108,7 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
                   key={ang.id}
                   onClick={() => {
                     setSelectedAngle(ang.id);
-                    sound.playPop();
+                    sound.playMeow('chirp');
                   }}
                   className={`px-2 py-1.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
                     selectedAngle === ang.id
@@ -123,7 +128,7 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
                   key={pose.id}
                   onClick={() => {
                     setSelectedAngle(pose.id);
-                    sound.playPop();
+                    sound.playMeow(pose.id === 'tired' ? 'meow' : 'chirp');
                   }}
                   className={`px-2.5 py-1 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
                     selectedAngle === pose.id
@@ -138,18 +143,18 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
           </div>
 
           {/* Hint and Pet Button */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2 border-t border-zinc-200/60 dark:border-zinc-700/60 w-full">
+          <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2 border-t border-zinc-200/60 dark:border-zinc-700/60 w-full">
             <button
               onClick={handlePetAction}
-              className="px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-xs font-bold border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-200 text-xs font-bold border border-amber-200 dark:border-amber-800 hover:bg-amber-200 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <Sparkles className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
               <span>Pet Neko {petCount > 0 ? `(${petCount} pets 🐾)` : ''}</span>
             </button>
 
-            <div className="flex items-center gap-1 text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="flex items-center gap-1 text-[11px] sm:text-xs text-zinc-500 dark:text-zinc-400">
               <MousePointer className="w-3.5 h-3.5 text-rose-500 animate-pulse" />
-              <span>Move your cursor anywhere to guide Neko</span>
+              <span>Move cursor or tap anywhere</span>
             </div>
           </div>
         </div>
@@ -158,7 +163,7 @@ export const NekoCursorScene: React.FC<NekoCursorSceneProps> = ({ onNext }) => {
         <button
           id="neko-continue-btn"
           onClick={handleContinue}
-          className="w-full sm:w-auto px-8 py-3.5 rounded-full font-bold text-base text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 mx-auto hover:scale-105 active:scale-95 transition-all cursor-pointer"
+          className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 rounded-full font-bold text-sm sm:text-base text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-lg shadow-rose-500/25 flex items-center justify-center gap-2 mx-auto hover:scale-105 active:scale-95 transition-all cursor-pointer"
         >
           <span>Continue to 3D Playground & Notes 🕹️</span>
           <ArrowRight className="w-4 h-4" />

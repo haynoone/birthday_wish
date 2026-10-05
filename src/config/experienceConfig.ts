@@ -1,4 +1,8 @@
 import { ExperienceConfig } from '../types';
+import img1 from '../assets/images/img1.jpg';
+import img2 from '../assets/images/img2.jpg';
+import img3 from '../assets/images/img3.jpg';
+import img4 from '../assets/images/img4.jpg';
 
 /**
  * Birthday Experience Configuration for Sadia (“Lil Valcano🌋”)
@@ -73,36 +77,32 @@ export const experienceConfig: ExperienceConfig = {
   ],
 
   // Memory card matching game pairs (4 pairs = 8 cards total)
-  // Replace these image URLs with custom photos of Sadia or memories!
+  // Powered by custom photos added by user in src/assets/images
   memoryGame: {
     cards: [
       {
-        pairId: 'volcano',
-        title: 'Lil Valcano',
-        emoji: '🌋',
-        imageUrl:
-          'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&auto=format&fit=crop&q=80',
-      },
-      {
-        pairId: 'cake',
-        title: 'Sweet Birthday',
-        emoji: '🎂',
-        imageUrl:
-          'https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?w=400&auto=format&fit=crop&q=80',
-      },
-      {
-        pairId: 'kitten',
-        title: 'Playful Neko',
-        emoji: '🐾',
-        imageUrl:
-          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=400&auto=format&fit=crop&q=80',
-      },
-      {
-        pairId: 'sparkle',
-        title: 'Pure Magic',
+        pairId: 'memory-1',
+        title: 'Memory 1',
         emoji: '✨',
-        imageUrl:
-          'https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&auto=format&fit=crop&q=80',
+        imageUrl: img1,
+      },
+      {
+        pairId: 'memory-2',
+        title: 'Memory 2',
+        emoji: '💖',
+        imageUrl: img2,
+      },
+      {
+        pairId: 'memory-3',
+        title: 'Memory 3',
+        emoji: '🌸',
+        imageUrl: img3,
+      },
+      {
+        pairId: 'memory-4',
+        title: 'Memory 4',
+        emoji: '🌟',
+        imageUrl: img4,
       },
     ],
   },
@@ -124,7 +124,7 @@ export const experienceConfig: ExperienceConfig = {
     subtitle: 'To the one and only Lil Valcano 🌋✨',
     message: `Dear Sadia,
 
-Happy Birthday! 🎂 Today is all about celebrating the wonderful, radiant energy you bring into the world. You’re truly one of a kind—explosive with positivity, heartwarming laughs, and endless kindness.
+Happy Birthday! 🎂 Today is all about celebrating you and the amazing energy you bring wherever you go. You’re honestly one of a kind—full of positivity (and lowkey negativity 🙃), random laughs, and so much kindness. Hope you have the best day and keep being the wonderful person you are! ❤️
 
 May this year bring you heaps of genuine happiness, glowing health, successful milestones, and unforgettable memories. God bless you always!
 
@@ -132,8 +132,8 @@ Thank you for being such a wonderful friend to me for more than a year...
 
 Keep shining, keep smiling, and never stop being the kind soul who cares for and protects every cat you find. 🐱❤️🌟`,
     link: {
-      label: 'Open Your Surprise Playlist & Memories 🎁',
-      url: 'https://open.spotify.com',
+      label: 'Write or wish something 💌',
+      url: '/message-for-tanvir',
     },
   },
 };

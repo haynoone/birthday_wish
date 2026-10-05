@@ -105,7 +105,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   return (
     <div
       id="countdown-timer-container"
-      className={`grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-xl mx-auto w-full ${className}`}
+      className={`grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 max-w-xl mx-auto w-full px-1 sm:px-0 ${className}`}
     >
       {cards.map((item) => {
         const displayValue = item.pad
@@ -116,7 +116,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
           <div
             key={item.label}
             id={`countdown-card-${item.label.toLowerCase()}`}
-            className="relative group rounded-2xl p-4 sm:p-5 bg-zinc-900/60 backdrop-blur-xl border border-white/10 hover:border-amber-500/30 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center overflow-hidden"
+            className="relative group rounded-xl sm:rounded-2xl p-3 sm:p-5 bg-zinc-900/60 backdrop-blur-xl border border-white/10 hover:border-amber-500/30 shadow-2xl transition-all duration-300 flex flex-col items-center justify-center overflow-hidden"
           >
             {/* Subtle inner top glow */}
             <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
@@ -125,7 +125,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
             <div className="absolute -bottom-8 -right-8 w-20 h-20 bg-amber-600/10 rounded-full blur-xl group-hover:bg-rose-500/20 transition-all duration-500 pointer-events-none" />
 
             {/* Digit with slide & fade Framer Motion animation */}
-            <div className="h-12 sm:h-14 flex items-center justify-center font-mono font-bold text-3xl sm:text-4xl lg:text-5xl text-zinc-100 tracking-tight select-none">
+            <div className="h-10 sm:h-14 flex items-center justify-center font-mono font-bold text-2xl sm:text-4xl lg:text-5xl text-zinc-100 tracking-tight select-none">
               <AnimatePresence mode="popLayout">
                 <motion.span
                   key={displayValue}
@@ -141,7 +141,7 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
             </div>
 
             {/* Label */}
-            <span className="mt-1 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-amber-300/80 group-hover:text-amber-300 transition-colors">
+            <span className="mt-1 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-amber-300/80 group-hover:text-amber-300 transition-colors">
               {item.label}
             </span>
           </div>

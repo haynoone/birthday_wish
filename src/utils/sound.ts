@@ -463,6 +463,117 @@ class SoundEngine {
     }
   }
 
+  /**
+   * Subtle, adorable kitten 'meow' sound synthesized via Web Audio API.
+   * Emulates real feline vocal formants (m-ee-o-w pitch bend, formant bandpass filter, and harmonics).
+   */
+  public playMeow(variant: 'meow' | 'chirp' | 'purr' = 'meow') {
+    if (this.isMuted) return;
+    try {
+      const ctx = this.getAudioContext();
+      const now = ctx.currentTime;
+
+      // Slight random pitch variation (+/- 4%) so rapid clicks feel organic & lively
+      const pitchVar = 0.96 + Math.random() * 0.08;
+
+      if (variant === 'chirp') {
+        // Quick inquisitive kitten chirp/mew (ideal for fast clicks on poses & compass)
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const filter = ctx.createBiquadFilter();
+
+        osc.type = 'sine';
+        const startFreq = 720 * pitchVar;
+        const peakFreq = 1040 * pitchVar;
+        const endFreq = 860 * pitchVar;
+        const duration = 0.16;
+
+        osc.frequency.setValueAtTime(startFreq, now);
+        osc.frequency.exponentialRampToValueAtTime(peakFreq, now + 0.06);
+        osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(1400, now);
+        filter.Q.setValueAtTime(1.8, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration + 0.02);
+        return;
+      }
+
+      // Classic sweet kitten meow (~0.38s)
+      const duration = 0.38;
+
+      // Dual oscillator: Warm fundamental sine + gentle harmonic triangle
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const oscGain1 = ctx.createGain();
+      const oscGain2 = ctx.createGain();
+
+      // Formant filter to produce the characteristic feline "m-e-e-o-w" acoustic shift
+      const formantFilter = ctx.createBiquadFilter();
+      formantFilter.type = 'bandpass';
+      formantFilter.Q.setValueAtTime(2.2, now);
+      // Sweep formant from 1200Hz to 1600Hz ("ee") down to 820Hz ("ow")
+      formantFilter.frequency.setValueAtTime(1200, now);
+      formantFilter.frequency.exponentialRampToValueAtTime(1600, now + 0.11);
+      formantFilter.frequency.exponentialRampToValueAtTime(820, now + duration);
+
+      // Pitch trajectory:
+      // Starts around 640 Hz (nasal "m"), swoops up to 890 Hz ("ee"), then glides down to 490 Hz ("ow")
+      const fStart = 640 * pitchVar;
+      const fPeak = 890 * pitchVar;
+      const fEnd = 490 * pitchVar;
+
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(fStart, now);
+      osc1.frequency.exponentialRampToValueAtTime(fPeak, now + 0.11);
+      osc1.frequency.exponentialRampToValueAtTime(fEnd, now + duration);
+
+      osc2.type = 'triangle';
+      osc2.frequency.setValueAtTime(fStart * 1.5, now);
+      osc2.frequency.exponentialRampToValueAtTime(fPeak * 1.5, now + 0.11);
+      osc2.frequency.exponentialRampToValueAtTime(fEnd * 1.5, now + duration);
+
+      // Master gain envelope
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0.001, now);
+      // Soft gentle attack
+      masterGain.gain.linearRampToValueAtTime(0.15, now + 0.04);
+      // Subtle sustain during vowel
+      masterGain.gain.setValueAtTime(0.14, now + 0.14);
+      // Smooth fade out as mouth closes
+      masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+      oscGain1.gain.setValueAtTime(0.85, now);
+      oscGain2.gain.setValueAtTime(0.22, now);
+
+      osc1.connect(oscGain1);
+      osc2.connect(oscGain2);
+
+      oscGain1.connect(formantFilter);
+      oscGain2.connect(formantFilter);
+
+      formantFilter.connect(masterGain);
+      masterGain.connect(ctx.destination);
+
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + duration + 0.02);
+      osc2.stop(now + duration + 0.02);
+    } catch {
+      // ignore
+    }
+  }
+
   // Cozy Lo-fi Birthday Synth Loop Fallback
   private startSynthMelody() {
     if (this.synthLoopId !== null) return;
