@@ -12,46 +12,6 @@
     <meta property="og:description" content="An interactive surprise mystery experience for Sadia (Lil Valcano) with special memories, 3D interactive moments, and surprises." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
-    <script>
-      // Filter out benign Vite HMR websocket noise per environment constraints
-      (function() {
-        const isViteWsError = function(val) {
-          if (!val) return false;
-          const str = typeof val === 'string' ? val : (val.message || val.stack || '');
-          return str.includes('send was called before connect') || str.includes('failed to connect to websocket');
-        };
-
-        const origError = console.error;
-        console.error = function(...args) {
-          if (args.some(isViteWsError)) {
-            console.debug('[vite:ignored-ws]', ...args);
-            return;
-          }
-          origError.apply(console, args);
-        };
-
-        const origWarn = console.warn;
-        console.warn = function(...args) {
-          if (args.some(isViteWsError)) {
-            console.debug('[vite:ignored-ws]', ...args);
-            return;
-          }
-          origWarn.apply(console, args);
-        };
-
-        window.addEventListener('unhandledrejection', function(event) {
-          if (isViteWsError(event.reason)) {
-            event.preventDefault();
-          }
-        });
-
-        window.addEventListener('error', function(event) {
-          if (isViteWsError(event.error) || isViteWsError(event.message)) {
-            event.preventDefault();
-          }
-        });
-      })();
-    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">

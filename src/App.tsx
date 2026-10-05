@@ -21,7 +21,7 @@ import { Login } from './pages/Login';
 import { MessageForTanvir } from './pages/MessageForTanvir';
 
 // Helper to check if experience was unlocked (via localStorage key)
-const isUnlockedViaStorage = (): boolean => {
+export const isUnlockedViaStorage = (): boolean => {
   try {
     return localStorage.getItem('sadiaBirthdayUnlocked') === 'true';
   } catch {
@@ -30,7 +30,7 @@ const isUnlockedViaStorage = (): boolean => {
 };
 
 // Check if target unlock date has been reached
-const hasTargetDatePassed = (): boolean => {
+export const hasTargetDatePassed = (): boolean => {
   const targetTime = new Date(experienceConfig.unlockDate).getTime();
   return !isNaN(targetTime) && Date.now() >= targetTime;
 };

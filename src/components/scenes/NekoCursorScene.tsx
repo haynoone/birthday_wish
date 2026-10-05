@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { sound } from '../../utils/sound';
 import { Sparkles, ArrowRight, MousePointer, Compass, Smile } from 'lucide-react';
-import { NekoSprite } from '../neko/NekoKitten';
-import { SPRITE_SETS } from '../neko/nekoConstants';
+import { NekoSprite, SPRITE_SETS } from '../neko/NekoKitten';
 
 interface NekoCursorSceneProps {
   onNext: () => void;

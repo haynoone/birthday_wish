@@ -12,7 +12,6 @@ import {
   Loader2,
   MessageSquareHeart,
   Flame,
-  MapPin,
 } from 'lucide-react';
 import { CloudBackground } from '../components/CloudBackground';
 import { AsciiOverlay } from '../components/AsciiOverlay';
@@ -41,31 +40,32 @@ const REACTIONS = [
 
 export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) => {
   // Formspree state hook
-  const [state, handleFormspreeSubmit, resetFormspree] = useForm(FORMSPREE_FORM_ID);
+  const [state, handleFormspreeSubmit] = useForm(FORMSPREE_FORM_ID);
 
   // Form input states
   const [name, setName] = useState('Sadia');
-  const [address, setAddress] = useState('');
   const [message, setMessage] = useState('');
   const [selectedReaction, setSelectedReaction] = useState<string>('');
   const [hasDismissedError, setHasDismissedError] = useState(false);
   const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
 
-  // Track if current message was delivered
-  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(false);
-
-  // Clear any legacy localStorage lock flag so Sadia can always send messages
-  useEffect(() => {
+  // Check if message was already sent previously to avoid duplicates
+  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(() => {
     try {
-      localStorage.removeItem('sadiaBirthdayMessageSent');
+      return localStorage.getItem('sadiaBirthdayMessageSent') === 'true';
     } catch {
-      // ignore
+      return false;
     }
-  }, []);
+  });
 
   // Handle successful submission
   useEffect(() => {
     if (state.succeeded && !isAlreadyDelivered) {
+      try {
+        localStorage.setItem('sadiaBirthdayMessageSent', 'true');
+      } catch (err) {
+        console.warn('Could not write to localStorage:', err);
+      }
       setIsAlreadyDelivered(true);
 
       // Subtle confetti & heart particle celebration burst
@@ -81,14 +81,10 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
     }
   }, [state.succeeded, isAlreadyDelivered]);
 
-  const isMessageValid = message.trim().length >= 5;
-  const isAddressValid = address.trim().length >= 5;
-  const isFormValid = isMessageValid && isAddressValid;
-
   // Form submission handler
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!isFormValid || state.submitting || isSubmittingLocal) {
+    if (message.trim().length < 5 || state.submitting || isSubmittingLocal) {
       return;
     }
 
@@ -106,6 +102,7 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
   };
 
   const isFormSubmitting = state.submitting || isSubmittingLocal;
+  const isMessageValid = message.trim().length >= 5;
   const hasError = !hasDismissedError && (Boolean(state.errors && Object.keys(state.errors).length > 0) || (!FORMSPREE_FORM_ID && isFormSubmitting));
 
   return (
@@ -181,26 +178,6 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
               </p>
 
               <div className="pt-6 border-t border-white/10 w-full max-w-sm flex flex-col gap-3">
-                <button
-                  type="button"
-                  id="send-another-message-btn"
-                  onClick={() => {
-                    sound.playPop();
-                    setAddress('');
-                    setMessage('');
-                    setSelectedReaction('');
-                    setHasDismissedError(false);
-                    if (typeof resetFormspree === 'function') {
-                      resetFormspree();
-                    }
-                    setIsAlreadyDelivered(false);
-                  }}
-                  className="w-full py-3 px-6 rounded-full font-bold text-sm text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-rose-500/25 active:scale-[0.98]"
-                >
-                  <Send className="w-4 h-4" />
-                  <span>Send another message 💌</span>
-                </button>
-
                 <button
                   type="button"
                   onClick={() => {
@@ -285,42 +262,6 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-zinc-700/80 bg-zinc-800/80 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-400 transition-all font-medium text-sm sm:text-base backdrop-blur-sm"
                   />
                   <ValidationError prefix="Name" field="name" errors={state.errors} className="text-xs text-rose-400 mt-1" />
-                </div>
-
-                {/* Delivery Address Field (Required) */}
-                <div className="text-left space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <label
-                      htmlFor="field-delivery-address"
-                      className="text-xs sm:text-sm font-semibold text-zinc-300 flex items-center gap-1.5"
-                    >
-                      <MapPin className="w-3.5 h-3.5 text-rose-400" />
-                      <span>Delivery Address <span className="text-rose-400">*</span></span>
-                    </label>
-                    <span
-                      className={`text-[11px] sm:text-xs font-medium tabular-nums ${
-                        address.length > 250
-                          ? 'text-rose-400'
-                          : isAddressValid
-                          ? 'text-emerald-400'
-                          : 'text-zinc-500'
-                      }`}
-                    >
-                      {address.length} / 300
-                    </span>
-                  </div>
-                  <textarea
-                    id="field-delivery-address"
-                    name="address"
-                    required
-                    rows={2}
-                    maxLength={300}
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Be Honest! (House / road / area / city / postal code)…"
-                    className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-zinc-700/80 bg-zinc-800/80 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-400 transition-all font-medium text-sm sm:text-base backdrop-blur-sm resize-none leading-relaxed"
-                  />
-                  <ValidationError prefix="Address" field="address" errors={state.errors} className="text-xs text-rose-400 mt-1" />
                 </div>
 
                 {/* Message Textarea */}
@@ -413,11 +354,11 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                   <motion.button
                     id="submit-message-btn"
                     type="submit"
-                    disabled={!isFormValid || isFormSubmitting}
-                    whileHover={isFormValid && !isFormSubmitting ? { scale: 1.02 } : {}}
-                    whileTap={isFormValid && !isFormSubmitting ? { scale: 0.98 } : {}}
+                    disabled={!isMessageValid || isFormSubmitting}
+                    whileHover={isMessageValid && !isFormSubmitting ? { scale: 1.02 } : {}}
+                    whileTap={isMessageValid && !isFormSubmitting ? { scale: 0.98 } : {}}
                     className={`w-full py-3.5 px-6 rounded-full font-bold text-sm sm:text-base text-white transition-all duration-300 shadow-xl flex items-center justify-center gap-2 select-none ${
-                      isFormValid && !isFormSubmitting
+                      isMessageValid && !isFormSubmitting
                         ? 'bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-rose-500/30 cursor-pointer'
                         : 'bg-zinc-800/80 border border-zinc-700/60 text-zinc-500 cursor-not-allowed shadow-none'
                     }`}
@@ -435,29 +376,11 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                     )}
                   </motion.button>
 
-                  {/* Field Requirement Hints */}
-                  {!isFormValid && (message.length > 0 || address.length > 0) && (
-                    <div className="text-[11px] text-zinc-400 text-center mt-2.5 space-y-1">
-                      {!isAddressValid && (
-                        <p className="flex items-center justify-center gap-1 text-rose-300/90 font-medium">
-                          <MapPin className="w-3 h-3 text-rose-400" />
-                          <span>
-                            Delivery address is required{' '}
-                            {address.trim().length > 0
-                              ? `(${5 - address.trim().length} more chars)`
-                              : ''}
-                          </span>
-                        </p>
-                      )}
-                      {!isMessageValid && (
-                        <p className="text-zinc-400">
-                          Message requires at least 5 characters{' '}
-                          {message.trim().length > 0
-                            ? `(${5 - message.trim().length} more to go)`
-                            : ''}
-                        </p>
-                      )}
-                    </div>
+                  {/* Character Requirement Hint */}
+                  {!isMessageValid && message.length > 0 && (
+                    <p className="text-[11px] text-zinc-400 text-center mt-2">
+                      At least 5 characters required ({5 - message.trim().length} more to go)
+                    </p>
                   )}
                 </div>
               </form>
