@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { experienceConfig } from '../../config/experienceConfig';
 import { sound } from '../../utils/sound';
 import { triggerCelebration } from '../../utils/celebration';
+import { FloatingEmojisBackground } from '../FloatingEmojisBackground';
 import {
   Volume2,
   VolumeX,
@@ -88,8 +89,11 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart, onNavigateToM
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.94 }}
       transition={{ duration: 0.6 }}
-      className="w-full max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col items-center select-none"
+      className="w-full max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-8 flex flex-col items-center select-none relative"
     >
+      {/* Whimsical Floating Birthday Emojis Background */}
+      <FloatingEmojisBackground count={20} intensity="vibrant" />
+
       {/* Grand Glowing Container */}
       <div className="w-full relative group">
         {/* Animated ambient radiant background glow */}

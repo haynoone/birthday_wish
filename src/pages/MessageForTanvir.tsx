@@ -40,7 +40,7 @@ const REACTIONS = [
 
 export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) => {
   // Formspree state hook
-  const [state, handleFormspreeSubmit] = useForm(FORMSPREE_FORM_ID);
+  const [state, handleFormspreeSubmit, resetFormspree] = useForm(FORMSPREE_FORM_ID);
 
   // Form input states
   const [name, setName] = useState('Sadia');
@@ -49,23 +49,21 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
   const [hasDismissedError, setHasDismissedError] = useState(false);
   const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
 
-  // Check if message was already sent previously to avoid duplicates
-  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(() => {
+  // Track if current message was delivered
+  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(false);
+
+  // Clear any legacy localStorage lock flag so Sadia can always send messages
+  useEffect(() => {
     try {
-      return localStorage.getItem('sadiaBirthdayMessageSent') === 'true';
+      localStorage.removeItem('sadiaBirthdayMessageSent');
     } catch {
-      return false;
+      // ignore
     }
-  });
+  }, []);
 
   // Handle successful submission
   useEffect(() => {
     if (state.succeeded && !isAlreadyDelivered) {
-      try {
-        localStorage.setItem('sadiaBirthdayMessageSent', 'true');
-      } catch (err) {
-        console.warn('Could not write to localStorage:', err);
-      }
       setIsAlreadyDelivered(true);
 
       // Subtle confetti & heart particle celebration burst
@@ -178,6 +176,25 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
               </p>
 
               <div className="pt-6 border-t border-white/10 w-full max-w-sm flex flex-col gap-3">
+                <button
+                  type="button"
+                  id="send-another-message-btn"
+                  onClick={() => {
+                    sound.playPop();
+                    setMessage('');
+                    setSelectedReaction('');
+                    setHasDismissedError(false);
+                    if (typeof resetFormspree === 'function') {
+                      resetFormspree();
+                    }
+                    setIsAlreadyDelivered(false);
+                  }}
+                  className="w-full py-3 px-6 rounded-full font-bold text-sm text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-rose-500/25 active:scale-[0.98]"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Send another message 💌</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => {

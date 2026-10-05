@@ -9,59 +9,63 @@ export type SceneId =
   | 'giftReveal';
 
 export interface MemoryGameCard {
-  id: string;
+  id?: string;
   pairId: string;
   title: string;
   emoji: string;
-  imageUrl: string;
+  imageUrl?: string;
+}
+
+export interface RecipientInfo {
+  name: string;
+  nickname: string;
+  birthday: string;
+}
+
+export interface IdentityGateConfig {
+  question: string;
+  hints: string[];
+  allowedAnswers: string[];
+  errorMessage: string;
+}
+
+export interface MemoryGameConfig {
+  cards: MemoryGameCard[];
+}
+
+export interface MusicConfig {
+  url: string;
+  title: string;
+  artist: string;
+}
+
+export interface FinalGiftLink {
+  label: string;
+  url: string;
 }
 
 export interface FinalGiftContent {
+  recipientName: string;
+  nickname: string;
+  birthdayDate: string;
   title: string;
   subtitle: string;
   message: string;
-  link?: {
-    label: string;
-    url: string;
-  };
-  birthdayDate: string;
-  recipientName: string;
-  nickname: string;
+  link?: FinalGiftLink;
 }
 
 export interface ExperienceConfig {
-  recipient: {
-    name: string;
-    nickname: string;
-    birthday: string;
-  };
+  recipient: RecipientInfo;
+  unlockDate: string;
+  unlockPassword: string;
   scenes: SceneId[];
   introTexts: {
     intro1: string;
     intro2: string;
   };
-  identityGate: {
-    question: string;
-    hints: string[];
-    allowedAnswers: string[];
-    errorMessage: string;
-  };
+  identityGate: IdentityGateConfig;
   terminalMessages: string[];
-  memoryGame: {
-    cards: Array<{
-      pairId: string;
-      title: string;
-      emoji: string;
-      imageUrl: string;
-    }>;
-  };
-  music: {
-    url: string;
-    title: string;
-    artist: string;
-  };
-  // Unlock date & password gate for locked countdown landing
-  unlockDate: string;
-  unlockPassword: string;
+  memoryGame: MemoryGameConfig;
+  music: MusicConfig;
   finalGift: FinalGiftContent;
 }
