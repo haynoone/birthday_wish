@@ -173,7 +173,7 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
               </h2>
 
               <p className="text-sm sm:text-base text-zinc-300 max-w-md mx-auto leading-relaxed flex items-center justify-center gap-1.5 font-medium">
-                <span>Now go have an amazing birthday, Lil Valcano</span>
+                <span>Now go have an amazing birthday, Marjia</span>
                 <Flame className="w-4 h-4 text-orange-500 fill-orange-500 inline" />
               </p>
 
