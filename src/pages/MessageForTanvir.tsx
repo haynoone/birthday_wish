@@ -15,16 +15,8 @@ import {
 import { CloudBackground } from '../components/CloudBackground';
 import { AsciiOverlay } from '../components/AsciiOverlay';
 import { EmbersBackground } from '../components/EmbersBackground';
+import { experienceConfig } from '../config/experienceConfig';
 import { sound } from '../utils/sound';
-
-/**
- * Formspree Integration Note for Tanvir:
- * 1. Create a free form at https://formspree.io
- * 2. Add your Formspree form ID to `.env` in the project root:
- *    VITE_FORMSPREE_FORM_ID=your_form_id_here
- * 3. Incoming messages from Sadia will be delivered directly and privately to your email inbox!
- */
-const FORMSPREE_FORM_ID = import.meta.env.VITE_FORMSPREE_FORM_ID || '';
 
 interface MessageForTanvirProps {
   onBack: () => void;
@@ -66,16 +58,22 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
       subject: 'A message from Sadia’s birthday website 💌',
     };
 
+    const activeFormId = (
+      import.meta.env.VITE_FORMSPREE_FORM_ID ||
+      experienceConfig.formspreeId ||
+      ''
+    ).trim();
+
     const hasFormspreeConfig =
-      Boolean(FORMSPREE_FORM_ID) &&
-      FORMSPREE_FORM_ID !== 'your_form_id_here' &&
-      FORMSPREE_FORM_ID.trim().length > 0;
+      Boolean(activeFormId) &&
+      activeFormId !== 'your_form_id_here' &&
+      activeFormId.length > 0;
 
     let success = false;
 
     if (hasFormspreeConfig) {
       try {
-        const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID.trim()}`, {
+        const response = await fetch(`https://formspree.io/f/${activeFormId}`, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -86,9 +84,11 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
 
         if (response.ok) {
           success = true;
+          console.info('💌 Message delivered successfully via Formspree to Tanvir’s email!');
         } else {
-          console.warn('Formspree returned status:', response.status);
-          // Persist locally even if Formspree rate-limits or misconfigures
+          const resData = await response.json().catch(() => null);
+          console.warn('Formspree returned error:', response.status, resData);
+          // Still consider success for user so Sadia’s celebration isn't blocked, but save locally
           success = true;
         }
       } catch (err) {
@@ -97,6 +97,9 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
         success = true;
       }
     } else {
+      console.warn(
+        '⚠️ Notice: No Formspree ID is configured yet! To receive emails, create a free form at https://formspree.io and paste the Form ID into .env (VITE_FORMSPREE_FORM_ID) or src/config/experienceConfig.ts (formspreeId).'
+      );
       // Local/demo mode: brief delay for realistic smooth feedback
       await new Promise((resolve) => setTimeout(resolve, 600));
       success = true;
