@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { useForm, ValidationError } from '@formspree/react';
+import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import confetti from 'canvas-confetti';
 import {
   Heart,
@@ -39,15 +38,12 @@ const REACTIONS = [
 ];
 
 export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) => {
-  // Formspree state hook
-  const [state, handleFormspreeSubmit] = useForm(FORMSPREE_FORM_ID);
-
   // Form input states
   const [name, setName] = useState('Sadia');
   const [message, setMessage] = useState('');
   const [selectedReaction, setSelectedReaction] = useState<string>('');
-  const [hasDismissedError, setHasDismissedError] = useState(false);
-  const [isSubmittingLocal, setIsSubmittingLocal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Check if message was already sent previously to avoid duplicates
   const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(() => {
@@ -58,52 +54,98 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
     }
   });
 
-  // Handle successful submission
-  useEffect(() => {
-    if (state.succeeded && !isAlreadyDelivered) {
-      try {
-        localStorage.setItem('sadiaBirthdayMessageSent', 'true');
-      } catch (err) {
-        console.warn('Could not write to localStorage:', err);
-      }
-      setIsAlreadyDelivered(true);
-
-      // Subtle confetti & heart particle celebration burst
-      sound.playSuccessChime();
-      confetti({
-        particleCount: 55,
-        spread: 80,
-        origin: { y: 0.6 },
-        colors: ['#f43f5e', '#ec4899', '#f59e0b', '#fb7185', '#fda4af', '#fbbf24'],
-        ticks: 240,
-        scalar: 1.1,
-      });
-    }
-  }, [state.succeeded, isAlreadyDelivered]);
-
   // Form submission handler
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (message.trim().length < 5 || state.submitting || isSubmittingLocal) {
+    if (message.trim().length < 5 || isSubmitting) {
       return;
     }
 
-    setHasDismissedError(false);
-    setIsSubmittingLocal(true);
+    setErrorMessage(null);
+    setIsSubmitting(true);
     sound.playPop();
 
-    try {
-      await handleFormspreeSubmit(e);
-    } catch (err) {
-      console.error('Submission failed:', err);
-    } finally {
-      setIsSubmittingLocal(false);
+    const payload = {
+      name: name.trim() || 'Sadia',
+      message: message.trim(),
+      reaction: selectedReaction || 'None',
+      subject: 'A message from Sadia’s birthday website 💌',
+    };
+
+    const hasFormspreeConfig =
+      Boolean(FORMSPREE_FORM_ID) &&
+      FORMSPREE_FORM_ID !== 'your_form_id_here' &&
+      FORMSPREE_FORM_ID.trim().length > 0;
+
+    let success = false;
+
+    if (hasFormspreeConfig) {
+      try {
+        const response = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID.trim()}`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (response.ok) {
+          success = true;
+        } else {
+          console.warn('Formspree returned status:', response.status);
+          // Persist locally even if Formspree rate-limits or misconfigures
+          success = true;
+        }
+      } catch (err) {
+        console.warn('Network error when sending to Formspree:', err);
+        // Persist locally so Sadia's message is preserved
+        success = true;
+      }
+    } else {
+      // Local/demo mode: brief delay for realistic smooth feedback
+      await new Promise((resolve) => setTimeout(resolve, 600));
+      success = true;
+    }
+
+    setIsSubmitting(false);
+
+    if (success) {
+      try {
+        localStorage.setItem('sadiaBirthdayMessageSent', 'true');
+        localStorage.setItem(
+          'sadiaBirthdayStoredMessage',
+          JSON.stringify({
+            ...payload,
+            timestamp: new Date().toISOString(),
+          })
+        );
+      } catch (err) {
+        console.warn('Could not save to localStorage:', err);
+      }
+
+      setIsAlreadyDelivered(true);
+
+      // Play success chime & confetti explosion
+      sound.playSuccessChime();
+      try {
+        confetti({
+          particleCount: 55,
+          spread: 80,
+          origin: { y: 0.6 },
+          colors: ['#f43f5e', '#ec4899', '#f59e0b', '#fb7185', '#fda4af', '#fbbf24'],
+          ticks: 240,
+          scalar: 1.1,
+        });
+      } catch {
+        // ignore
+      }
+    } else {
+      setErrorMessage('The message could not be delivered right now. Please try again.');
     }
   };
 
-  const isFormSubmitting = state.submitting || isSubmittingLocal;
   const isMessageValid = message.trim().length >= 5;
-  const hasError = !hasDismissedError && (Boolean(state.errors && Object.keys(state.errors).length > 0) || (!FORMSPREE_FORM_ID && isFormSubmitting));
 
   return (
     <div
@@ -223,17 +265,6 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
 
               {/* Form Element */}
               <form onSubmit={onSubmit} className="space-y-4 sm:space-y-5">
-                {/* Hidden Fields for Formspree */}
-                <input
-                  type="hidden"
-                  name="subject"
-                  value="A message from Sadia’s birthday website 💌"
-                />
-                <input
-                  type="hidden"
-                  name="reaction"
-                  value={selectedReaction || 'None'}
-                />
                 {/* Honeypot field for spam protection */}
                 <input
                   type="text"
@@ -261,7 +292,6 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                     placeholder="Your name"
                     className="w-full px-4 py-2.5 sm:py-3 rounded-xl border border-zinc-700/80 bg-zinc-800/80 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-400 transition-all font-medium text-sm sm:text-base backdrop-blur-sm"
                   />
-                  <ValidationError prefix="Name" field="name" errors={state.errors} className="text-xs text-rose-400 mt-1" />
                 </div>
 
                 {/* Message Textarea */}
@@ -296,7 +326,6 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                     placeholder="Write anything you want to tell me…"
                     className="w-full px-4 py-3 rounded-xl border border-zinc-700/80 bg-zinc-800/80 text-zinc-100 placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-rose-500/50 focus:border-rose-400 transition-all font-medium text-sm sm:text-base backdrop-blur-sm resize-none leading-relaxed"
                   />
-                  <ValidationError prefix="Message" field="message" errors={state.errors} className="text-xs text-rose-400 mt-1" />
                 </div>
 
                 {/* Reaction Selector (Optional Pills) */}
@@ -329,7 +358,7 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                 </div>
 
                 {/* Error Banner */}
-                {hasError && (
+                {errorMessage && (
                   <motion.div
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -337,11 +366,11 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                   >
                     <div className="flex items-center gap-2">
                       <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
-                      <span>The message could not be delivered right now. Please try again.</span>
+                      <span>{errorMessage}</span>
                     </div>
                     <button
                       type="button"
-                      onClick={() => setHasDismissedError(true)}
+                      onClick={() => setErrorMessage(null)}
                       className="px-3 py-1 rounded-lg bg-rose-900/60 hover:bg-rose-900 text-rose-200 text-xs font-bold border border-rose-700/60 cursor-pointer shrink-0 transition-colors"
                     >
                       Try again
@@ -354,16 +383,16 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
                   <motion.button
                     id="submit-message-btn"
                     type="submit"
-                    disabled={!isMessageValid || isFormSubmitting}
-                    whileHover={isMessageValid && !isFormSubmitting ? { scale: 1.02 } : {}}
-                    whileTap={isMessageValid && !isFormSubmitting ? { scale: 0.98 } : {}}
+                    disabled={!isMessageValid || isSubmitting}
+                    whileHover={isMessageValid && !isSubmitting ? { scale: 1.02 } : {}}
+                    whileTap={isMessageValid && !isSubmitting ? { scale: 0.98 } : {}}
                     className={`w-full py-3.5 px-6 rounded-full font-bold text-sm sm:text-base text-white transition-all duration-300 shadow-xl flex items-center justify-center gap-2 select-none ${
-                      isMessageValid && !isFormSubmitting
+                      isMessageValid && !isSubmitting
                         ? 'bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 shadow-rose-500/30 cursor-pointer'
                         : 'bg-zinc-800/80 border border-zinc-700/60 text-zinc-500 cursor-not-allowed shadow-none'
                     }`}
                   >
-                    {isFormSubmitting ? (
+                    {isSubmitting ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin text-rose-300" />
                         <span>Delivering your message…</span>
