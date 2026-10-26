@@ -31,6 +31,15 @@ export const experienceConfig: ExperienceConfig = {
   unlockDate: '2026-10-28T00:00:00',
   unlockPassword: 'izel_sadia_hates_me',
 
+  /**
+   * FORMSPREE FORM ID
+   * To receive Sadia's messages in your personal email inbox:
+   * 1. Go to https://formspree.io and create a free form with your email.
+   * 2. Copy the 8-character Form ID (e.g. "xpzvwkba").
+   * 3. Paste it here, or set VITE_FORMSPREE_FORM_ID in a .env file.
+   */
+  formspreeId: '',
+
   // Exact scene flow order
   scenes: [
     'intro1',
