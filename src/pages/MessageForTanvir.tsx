@@ -45,14 +45,8 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Check if message was already sent previously to avoid duplicates
-  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(() => {
-    try {
-      return localStorage.getItem('sadiaBirthdayMessageSent') === 'true';
-    } catch {
-      return false;
-    }
-  });
+  // Delivered view state (starts on form so Sadia can always send messages)
+  const [isAlreadyDelivered, setIsAlreadyDelivered] = useState<boolean>(false);
 
   // Form submission handler
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -220,6 +214,24 @@ export const MessageForTanvir: React.FC<MessageForTanvirProps> = ({ onBack }) =>
               </p>
 
               <div className="pt-6 border-t border-white/10 w-full max-w-sm flex flex-col gap-3">
+                {/* Send Another Message Button */}
+                <button
+                  type="button"
+                  id="send-another-message-btn"
+                  onClick={() => {
+                    sound.playPop();
+                    setMessage('');
+                    setSelectedReaction('');
+                    setErrorMessage(null);
+                    setIsAlreadyDelivered(false);
+                  }}
+                  className="w-full py-3.5 px-6 rounded-full font-bold text-sm text-white bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 hover:from-rose-600 hover:to-amber-600 transition-all cursor-pointer flex items-center justify-center gap-2 shadow-lg shadow-rose-500/25 active:scale-[0.98]"
+                >
+                  <Send className="w-4 h-4" />
+                  <span>Send another message 💌</span>
+                </button>
+
+                {/* Return to Experience Button */}
                 <button
                   type="button"
                   onClick={() => {
