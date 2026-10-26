@@ -38,7 +38,7 @@ export const experienceConfig: ExperienceConfig = {
    * 2. Copy the 8-character Form ID (e.g. "xpzvwkba").
    * 3. Paste it here, or set VITE_FORMSPREE_FORM_ID in a .env file.
    */
-  formspreeId: '',
+  formspreeId: 'mrppplvr',
 
   // Exact scene flow order
   scenes: [
