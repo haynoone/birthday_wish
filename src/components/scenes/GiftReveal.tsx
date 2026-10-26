@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { experienceConfig } from '../../config/experienceConfig';
 import { sound } from '../../utils/sound';
 import { triggerCelebration } from '../../utils/celebration';
 import {
-  Volume2,
-  VolumeX,
   Sparkles,
   RotateCcw,
   PartyPopper,
@@ -13,7 +11,6 @@ import {
   Flame,
   Cake,
   Heart,
-  Mail,
 } from 'lucide-react';
 
 interface GiftRevealProps {
@@ -22,7 +19,6 @@ interface GiftRevealProps {
 }
 
 export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart, onNavigateToMessage }) => {
-  const [isSpeaking, setIsSpeaking] = useState(false);
   const gift = experienceConfig.finalGift;
 
   useEffect(() => {
@@ -33,49 +29,6 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart, onNavigateToM
     }, 1400);
     return () => clearTimeout(timer);
   }, []);
-
-  // Voice narration using window.speechSynthesis
-  const handlePlayVoice = () => {
-    if (!('speechSynthesis' in window)) {
-      console.warn('Speech synthesis is not supported on this browser.');
-      return;
-    }
-
-    if (isSpeaking) {
-      window.speechSynthesis.cancel();
-      setIsSpeaking(false);
-      return;
-    }
-
-    window.speechSynthesis.cancel(); // Stop any pending speech
-    sound.playPop();
-
-    const voiceText = `Happy Birthday, ${gift.recipientName}! May your year ahead be as bright and explosive with joy as Lil Valcano! Wishing you endless happiness, good health, and many blessings. Have the most wonderful day today!`;
-
-    const utterance = new SpeechSynthesisUtterance(voiceText);
-    utterance.rate = 0.95;
-    utterance.pitch = 1.1;
-
-    // Pick a pleasant voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const friendlyVoice = voices.find(
-      (v) =>
-        v.lang.startsWith('en') &&
-        (v.name.includes('Natural') ||
-          v.name.includes('Google') ||
-          v.name.includes('Samantha') ||
-          v.name.includes('Karen'))
-    );
-    if (friendlyVoice) {
-      utterance.voice = friendlyVoice;
-    }
-
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
-
-    window.speechSynthesis.speak(utterance);
-  };
 
   const triggerMoreConfetti = () => {
     triggerCelebration({ intensity: 'normal', playSound: true });
@@ -118,31 +71,8 @@ export const GiftReveal: React.FC<GiftRevealProps> = ({ onRestart, onNavigateToM
               </div>
             </div>
 
-            {/* Quick Confetti & Voice controls */}
+            {/* Quick Confetti control */}
             <div className="flex items-center gap-2">
-              <button
-                id="play-voice-btn"
-                onClick={handlePlayVoice}
-                className={`px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm ${
-                  isSpeaking
-                    ? 'bg-rose-500 text-white animate-pulse'
-                    : 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800 hover:bg-rose-100'
-                }`}
-              >
-                {isSpeaking ? (
-                  <>
-                    <VolumeX className="w-3.5 h-3.5" />
-                    <span>Stop</span>
-                  </>
-                ) : (
-                  <>
-                    <Volume2 className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Play Voice Wish 🎙️</span>
-                    <span className="sm:hidden">Voice 🎙️</span>
-                  </>
-                )}
-              </button>
-
               <button
                 id="more-confetti-btn"
                 onClick={triggerMoreConfetti}
