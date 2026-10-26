@@ -64,4 +64,5 @@ export interface ExperienceConfig {
   unlockDate: string;
   unlockPassword: string;
   finalGift: FinalGiftContent;
+  formspreeId?: string;
 }
